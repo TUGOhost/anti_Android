@@ -1,0 +1,2 @@
+# anti
+anti debug/injection
