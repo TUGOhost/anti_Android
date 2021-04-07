@@ -1,2 +1,2 @@
 # anti
-anti debug/injection
+anti debug/injection/dual app...
