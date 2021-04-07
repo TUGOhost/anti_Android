@@ -7,8 +7,9 @@ public class App extends Application {
     static {
         System.loadLibrary("native-lib");
     }
-    public static native String stringFromJNI();
 
+    // anti frida
+    public static native String stringFromJNI();
     public static native String stringFromTime();
     //public static native String stringFromFile();
     public static native String stringFromTrick();
@@ -17,4 +18,8 @@ public class App extends Application {
     public static native String stringFromBkpt();
     public static native String stringFromFork();
     public static native String stringFromSignal();
+
+    // anti dual app
+    public static native String antiDualAppForSystem();
+    public static native String antiDualAppForUser();
 }

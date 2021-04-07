@@ -122,9 +122,18 @@ Java_com_tg_antiptrace_App_stringFromJNI(
 }
 
 
+/**
+ *
+ * 通过在代码不同的地方获取时间值，从而可以求出这个过程中的执行时间。如果两个时间值相差过大，则说明中间的代码流程被调试了。
+ * 因为调试者停下来一步步观察了这一段代码的执行情况，因此这部分代码的执行时间远远超出了普通状态的执行时间。
+
+   这个方法一个不好的特点是需要一定的代码跨度，因此可能需要暴露部分代码逻辑。因为如果两个时间的取值点非常非常近，那很可能调试者在两者之间没有断点从而迅速跳过。
+    https://gtoad.github.io/2017/06/25/Android-Anti-Debug/
+ */
+
 extern "C" JNIEXPORT jstring JNICALL
         Java_com_tg_antiptrace_App_stringFromTime(JNIEnv* env,
-                                                  jobject clazz){
+                                                  jclass clazz){
     long start, end;
     start = clock();
     std::string hello = "Hello from time";
@@ -172,7 +181,7 @@ Java_com_tg_antiptrace_App_stringFromFile(JNIEnv* env,
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_tg_antiptrace_App_stringFromTrick(JNIEnv* env,
-                                          jobject clazz){
+                                           jclass clazz){
     std::string hello = "Hello from trick";
     return env->NewStringUTF(hello.c_str());
 }
@@ -200,7 +209,7 @@ Java_com_tg_antiptrace_App_stringFromPtrace(JNIEnv* env,
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_tg_antiptrace_App_stringFromBkpt(JNIEnv* env,
-                                            jobject clazz){
+                                          jclass clazz){
     std::string hello = "Hello from bkpt";
     if (checkBreakPoint())
         hello = "Debug from bkpt";
@@ -342,7 +351,7 @@ void anti3(){
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_tg_antiptrace_App_stringFromFork(JNIEnv* env,
-                                          jobject clazz){
+                                          jclass clazz){
     std::string hello = "Hello from fork";
     pthread_t id_0;
     id_0 = pthread_self();
