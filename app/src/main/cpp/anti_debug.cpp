@@ -32,37 +32,34 @@
 
 
 extern "C"
-unsigned long getLibAddr(const char * lib)
-{
+unsigned long getLibAddr(const char *lib) {
     puts("Enter getLibAddr");
     unsigned long addr = 0;
     char lineBuf[256];
 
     snprintf(lineBuf, 256 - 1, "/proc/%d/maps/", getpid());
     FILE *fp = fopen(lineBuf, "r");
-    if (fp == NULL)
-    {
+    if (fp == NULL) {
         perror("fopen failed");
         goto bail;
     }
-    while (fgets(lineBuf , sizeof(lineBuf), fp)) {
+    while (fgets(lineBuf, sizeof(lineBuf), fp)) {
         if (strstr(lineBuf, lib)) {
-            char * temp = strtok(lineBuf, "-");
+            char *temp = strtok(lineBuf, "-");
             addr = strtoul(temp, NULL, 16);
             break;
         }
     }
     bail:
-        fclose(fp);
+    fclose(fp);
     return addr;
 }
 
-bool checkBreakPoint()
-{
-    __android_log_print(ANDROID_LOG_INFO,"JNI","13838438");
+bool checkBreakPoint() {
+    __android_log_print(ANDROID_LOG_INFO, "JNI", "13838438");
     int i, j;
     unsigned int base, offset, pheader;
-    Elf32_Ehdr  *elfhdr;
+    Elf32_Ehdr *elfhdr;
     Elf32_Phdr *phdr;
 
     base = getLibAddr("libnative-lib.so");
@@ -72,20 +69,20 @@ bool checkBreakPoint()
         return false;
     }
 
-    __android_log_print(ANDROID_LOG_INFO,"JNI","13838438");
+    __android_log_print(ANDROID_LOG_INFO, "JNI", "13838438");
 
     elfhdr = (Elf32_Ehdr *) base;
     pheader = base + elfhdr->e_phoff;
 
-    for (i = 0; i < elfhdr->e_phnum; i ++) {
-        phdr = (Elf32_Phdr*) (pheader + i *sizeof(Elf32_Phdr));
+    for (i = 0; i < elfhdr->e_phnum; i++) {
+        phdr = (Elf32_Phdr *) (pheader + i * sizeof(Elf32_Phdr));
 
         if (!(phdr->p_flags & 1)) continue;
         offset = base + phdr->p_vaddr;
         offset += sizeof(Elf32_Ehdr) + sizeof(Elf32_Phdr) * elfhdr->e_phnum;
 
-        char *p = (char *)offset;
-        for (j = 0; j < phdr->p_memsz; j ++) {
+        char *p = (char *) offset;
+        for (j = 0; j < phdr->p_memsz; j++) {
             if (*p == 0x01 && *(p + 1) == 0xde) {
                 LOGI("Find thumb bpt %p", p);
                 return true;
@@ -96,17 +93,16 @@ bool checkBreakPoint()
                 LOGI("Find arm bpt %p", p);
                 return true;
             }
-            p ++;
+            p++;
         }
-     }
+    }
     return false;
 }
 
 
-
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_tg_antiptrace_App_stringFromJNI(
-        JNIEnv* env,
+        JNIEnv *env,
         jclass clazz) {
     std::string str = "no one trace me:)\n";
     std::string hello;
@@ -132,13 +128,13 @@ Java_com_tg_antiptrace_App_stringFromJNI(
  */
 
 extern "C" JNIEXPORT jstring JNICALL
-        Java_com_tg_antiptrace_App_stringFromTime(JNIEnv* env,
-                                                  jclass clazz){
+Java_com_tg_antiptrace_App_stringFromTime(JNIEnv *env,
+                                          jclass clazz) {
     long start, end;
     start = clock();
     std::string hello = "Hello from time";
     end = clock();
-    if (end - start > 10000)  {
+    if (end - start > 10000) {
         hello = "Debug from time";
     }
     return env->NewStringUTF(hello.c_str());
@@ -146,19 +142,19 @@ extern "C" JNIEXPORT jstring JNICALL
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_tg_antiptrace_App_stringFromFile(JNIEnv* env,
-                                          jobject clazz){
+Java_com_tg_antiptrace_App_stringFromFile(JNIEnv *env,
+                                          jobject clazz) {
     std::string hello;
-    std::stringstream  stream;
+    std::stringstream stream;
     int pid = getpid();
     int fd;
     stream << pid;
     stream >> hello;
-    hello = "/proc/"  + hello + "/status";
+    hello = "/proc/" + hello + "/status";
     //LOGI(hello);
-    char * pathname = new char[30];
+    char *pathname = new char[30];
     strcpy(pathname, hello.c_str());
-    char * buf = new char[500];
+    char *buf = new char[500];
     int flag = O_RDONLY;
     fd = open(pathname, flag);
     read(fd, buf, 500);
@@ -180,23 +176,23 @@ Java_com_tg_antiptrace_App_stringFromFile(JNIEnv* env,
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_tg_antiptrace_App_stringFromTrick(JNIEnv* env,
-                                           jclass clazz){
+Java_com_tg_antiptrace_App_stringFromTrick(JNIEnv *env,
+                                           jclass clazz) {
     std::string hello = "Hello from trick";
     return env->NewStringUTF(hello.c_str());
 }
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_tg_antiptrace_App_stringFromVm(JNIEnv* env,
-                                           jobject clazz){
+Java_com_tg_antiptrace_App_stringFromVm(JNIEnv *env,
+                                        jobject clazz) {
     std::string hello = "Hello from vm";
     return env->NewStringUTF(hello.c_str());
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_tg_antiptrace_App_stringFromPtrace(JNIEnv* env,
-                                        jobject clazz){
+Java_com_tg_antiptrace_App_stringFromPtrace(JNIEnv *env,
+                                            jobject clazz) {
     int check = ptrace(PTRACE_TRACEME, 0, 0, 0);
     LOGI("ret of ptrace : %d", check);
     std::string hello = "Hello from ptrace";
@@ -208,26 +204,26 @@ Java_com_tg_antiptrace_App_stringFromPtrace(JNIEnv* env,
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_tg_antiptrace_App_stringFromBkpt(JNIEnv* env,
-                                          jclass clazz){
+Java_com_tg_antiptrace_App_stringFromBkpt(JNIEnv *env,
+                                          jclass clazz) {
     std::string hello = "Hello from bkpt";
     if (checkBreakPoint())
         hello = "Debug from bkpt";
     return env->NewStringUTF(hello.c_str());
 }
 
-char dynamic_ccode[] = {0x1f,0xb4, //push {r0-r4}
-                        0x01,0xde, //breakpoint
-                        0x1f,0xbc, //pop {r0-r4}
-                        0xf7,0x46};//mov pc,lr
+char dynamic_ccode[] = {0x1f, 0xb4, //push {r0-r4}
+                        0x01, 0xde, //breakpoint
+                        0x1f, 0xbc, //pop {r0-r4}
+                        0xf7, 0x46};//mov pc,lr
 
 char *g_addr = 0;
 
-void my_sigtrap(int sig){
+void my_sigtrap(int sig) {
     LOGI("my_sigtrap\n");
     char change_bkp[] = {0x00, 0x46};// mov r0,r0
     memcpy(g_addr + 2, change_bkp, 2);
-    __builtin___clear_cache(g_addr,(g_addr+8)); // need to clear cache
+    __builtin___clear_cache(g_addr, (g_addr + 8)); // need to clear cache
     LOGI("change bpk to nop\n");
 }
 
@@ -235,10 +231,10 @@ void anti4() {
     int ret, size;
     char *addr, tmpaddr;
     signal(SIGTRAP, my_sigtrap);
-    addr = (char *)malloc(PAGE_SIZE * 2);
+    addr = (char *) malloc(PAGE_SIZE * 2);
 
     memset(addr, 0, PAGE_SIZE * 2);
-    g_addr = (char *)(((long) addr + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1));
+    g_addr = (char *) (((long) addr + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1));
     LOGI("addr: %p, g_addr : %p\n", addr, g_addr);
 
     ret = mprotect(g_addr, PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC);
@@ -249,7 +245,7 @@ void anti4() {
 
     size = 8;
     memcpy(g_addr, dynamic_ccode, size);
-    __builtin___clear_cache(g_addr,(g_addr + size)); // need to clear cache
+    __builtin___clear_cache(g_addr, (g_addr + size)); // need to clear cache
     LOGI("start stub\n");
 
     /*__asm__("push {r5}\n\t"
@@ -271,8 +267,8 @@ void anti4() {
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_tg_antiptrace_App_stringFromSignal(JNIEnv* env,
-                                          jobject clazz){
+Java_com_tg_antiptrace_App_stringFromSignal(JNIEnv *env,
+                                            jobject clazz) {
     anti4();
     std::string hello = "Hello from signal";
     return env->NewStringUTF(hello.c_str());
@@ -281,7 +277,7 @@ Java_com_tg_antiptrace_App_stringFromSignal(JNIEnv* env,
 int pipefd[2];
 int childpid;
 
-void *anti3_thread(void *){
+void *anti3_thread(void *) {
     int statue = -1, alive = 1, count = 0;
     close(pipefd[1]);
 
@@ -308,7 +304,7 @@ void *anti3_thread(void *){
     }
 }
 
-void anti3(){
+void anti3() {
     int pid, p;
     FILE *fd;
     char filename[MAX];
@@ -324,7 +320,7 @@ void anti3(){
         pt = ptrace(PTRACE_TRACEME, 0, 0, 0);// 子进程反调试
         while (true) {
             fd = fopen(filename, "r");
-            while (fgets(line, MAX, fd)){
+            while (fgets(line, MAX, fd)) {
                 if (strstr(line, "TracePid") != NULL) {
                     LOGI("line %s", line);
                     int statue = atoi(&line[10]);
@@ -343,20 +339,20 @@ void anti3(){
             }
             sleep(1);
         }
-    } else{
+    } else {
         LOGI("Father");
         childpid = p;
     }
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_tg_antiptrace_App_stringFromFork(JNIEnv* env,
-                                          jclass clazz){
+Java_com_tg_antiptrace_App_stringFromFork(JNIEnv *env,
+                                          jclass clazz) {
     std::string hello = "Hello from fork";
     pthread_t id_0;
     id_0 = pthread_self();
     pipe(pipefd);
-    pthread_create(&id_0, NULL ,anti3_thread, (void *) NULL);
+    pthread_create(&id_0, NULL, anti3_thread, (void *) NULL);
     LOGI("Start");
     anti3();
 

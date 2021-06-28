@@ -7,16 +7,16 @@
 #include <string>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_tg_antiptrace_App_antiDualAppForSystem(JNIEnv* env,
-                                                jclass clazz){
+Java_com_tg_antiptrace_App_antiDualAppForSystem(JNIEnv *env,
+                                                jclass clazz) {
     std::string hello = "Hello from JNI";
     bool is_dual_app_for_system = 0 != getuid() / 100000;
     return env->NewStringUTF(hello.c_str());
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_tg_antiptrace_App_antiDualAppForUserJNIEnv(JNIEnv* env,
-                                                jclass clazz){
+Java_com_tg_antiptrace_App_antiDualAppForUserJNIEnv(JNIEnv *env,
+                                                    jclass clazz) {
     std::string hello = "Hello from JNI";
     return env->NewStringUTF(hello.c_str());
 }
@@ -27,6 +27,6 @@ Java_com_tg_antiptrace_App_antiDualAppForUserJNIEnv(JNIEnv* env,
 // https://bbs.pediy.com/thread-266855.htm
 bool checkDualApp() {
     char buf[128];
-    readlink("/proc/self/exe", (char *)&buf, 127);
+    readlink("/proc/self/exe", (char *) &buf, 127);
     return strstr("app_process") == 0;
 }
