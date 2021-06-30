@@ -1,4 +1,4 @@
-package com.tg.antiptrace;
+package com.tg.anti;
 
 import android.content.Context;
 

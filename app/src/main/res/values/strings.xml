@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">antiPtrace</string>
+    <string name="frida">frida</string>
+    <string name="xposed">xposed</string>
+    <string name="dualApp">dualApp</string>
+    <string name="emulator">emulator</string>
+    <string name="memDump">memDump</string>
+    <string name="debug">debug</string>
+    <string name="root">root</string>
+    <string name="virtualApp">virtualApp</string>
 </resources>

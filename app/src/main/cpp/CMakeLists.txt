@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.10.2)
 
 # Declares and names the project.
 
-project("antiptrace")
+project("anti")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -21,7 +21,14 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-        anti_frida.cpp)
+        anti_frida.cpp
+        anti_xposed.cpp
+        anti_root.cpp
+        anti_debug.cpp
+        anti_dual_app.cpp
+        anti_emulator.cpp
+        anti_mem_dump.cpp
+        anti_virtual_app.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
