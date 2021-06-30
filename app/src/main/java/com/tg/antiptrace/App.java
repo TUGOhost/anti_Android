@@ -8,25 +8,20 @@ public class App extends Application {
     static {
         System.loadLibrary("native-lib");
     }
-
     // anti frida
-    public static native String stringFromJNI();
+    public static native String AntiFrida();
 
-    public static native String stringFromTime();
+    // anti xposed/like xposed
 
-    //public static native String stringFromFile();
-    public static native String stringFromTrick();
+    // anti root
 
-    //public static native String stringFromVm();
-    //public static native String stringFromPtrace();
-    public static native String stringFromBkpt();
+    // anti debug
 
-    public static native String stringFromFork();
+    // anti memdump
 
-    public static native String stringFromSignal();
+    // anti virtual app
+
+    // anti emulator
 
     // anti dual app
-    public static native String antiDualAppForSystem();
-
-    public static native String antiDualAppForUser();
 }

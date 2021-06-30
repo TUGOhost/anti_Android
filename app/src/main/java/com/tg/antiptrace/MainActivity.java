@@ -12,7 +12,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         TextView tv = findViewById(R.id.sample_text);
-        tv.setText(App.stringFromTime());
+        tv.setText(App.AntiFrida());
     }
 
 }
