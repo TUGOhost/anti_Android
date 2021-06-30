@@ -7,5 +7,7 @@
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_tg_anti_MainActivity_AntiXposed(JNIEnv *env, jclass clazz) {
-    // TODO: implement AntiXposed()
+    jstring jresult = nullptr;
+    jresult = env->NewStringUTF("security");
+    return jresult;
 }
