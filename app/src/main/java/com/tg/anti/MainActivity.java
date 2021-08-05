@@ -38,6 +38,8 @@ public class MainActivity extends Activity {
     static {
         System.loadLibrary("native-lib");
     }
+
+
     // anti frida
     public static native String AntiFrida();
 
@@ -61,5 +63,4 @@ public class MainActivity extends Activity {
 
     // anti dual app
     public static native String AntiDualApp();
-
 }

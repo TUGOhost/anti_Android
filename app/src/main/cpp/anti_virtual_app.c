@@ -4,10 +4,9 @@
 
 #include <jni.h>
 
-extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_tg_anti_MainActivity_AntiVirtualApp(JNIEnv *env, jclass clazz) {
-    jstring jresult = nullptr;
-    jresult = env->NewStringUTF("security");
+    jstring jresult = ( *env)->NewStringUTF(env, "security");
     return jresult;
+  // TODO
 }

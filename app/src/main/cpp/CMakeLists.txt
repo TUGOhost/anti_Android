@@ -21,14 +21,14 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-        anti_frida.cpp
-        anti_xposed.cpp
-        anti_root.cpp
-        anti_debug.cpp
-        anti_dual_app.cpp
-        anti_emulator.cpp
-        anti_mem_dump.cpp
-        anti_virtual_app.cpp)
+        anti_frida.c
+        anti_xposed.c
+        anti_root.c
+        anti_debug.c
+        anti_dual_app.c
+        anti_emulator.c
+        anti_mem_dump.c
+        anti_virtual_app.c)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
