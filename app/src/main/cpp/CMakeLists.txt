@@ -28,7 +28,8 @@ add_library( # Sets the name of the library.
         anti_dual_app.c
         anti_emulator.c
         anti_mem_dump.c
-        anti_virtual_app.c)
+        anti_virtual_app.c
+        anti_magisk.c)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
