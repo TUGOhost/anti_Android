@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <inttypes.h>
 #include <sys/mman.h>
 
 #include "logging.h"
@@ -25,7 +26,7 @@ void anti_frida() {
     pid_t pid = getpid();
     uint64_t start = frida_find_library_base(pid, "libc", &path);
 
-    if (start != 0 && path != NULL, && strlen(path) > 0) {
+    if (start != 0 && path != NULL && strlen(path) > 0) {
 
         uint64_t base = _find_library_space_base(pid, start, page_size);
 

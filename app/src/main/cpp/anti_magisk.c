@@ -18,6 +18,8 @@
 static int major = -1;
 static int minor = -1;
 
+// 有问题，先注释掉。
+/*
 static inline void sscanfx(const char *restrict s, const char *restrict fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -180,4 +182,4 @@ static void hash(uint8_t buffer[SHA512_DIGEST_LENGTH], const char *name, const c
             buffer[i] ^= out[i];
         }
     }
-}
+}*/
