@@ -23,4 +23,7 @@ anti frida的灵感也是来自于这里。就是将mmap一个只读的libc到ma
 
 ## Anti Virtual App/Multi Run
 
+### Anti Virtual App
+Virtual App 会在自己的文件系统中创建一个文件目录，通过这特点可以判断是否为Virtual App，因为正常情况下，app访问所有父目录都是不可读的。
+
 ## Anti Emulator
