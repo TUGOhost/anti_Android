@@ -18,6 +18,8 @@
 static int major = -1;
 static int minor = -1;
 
+// 可以通过检测riru的特征来进行检测magisk
+
 // 有问题，先注释掉。
 /*
 static inline void sscanfx(const char *restrict s, const char *restrict fmt, ...) {

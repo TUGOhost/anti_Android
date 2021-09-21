@@ -13,7 +13,7 @@
 static uint64_t frida_find_library_base(pid_t pid, const char *library_name,
                                    char **library_path);
 
-static uint64_t _find_library_space_base(pid_t pid, uint64_t base,
+static uint64_t frida_find_library_space_base(pid_t pid, uint64_t base,
                                          uint32_t page_size);
 
 /**
@@ -28,7 +28,7 @@ void anti_frida() {
 
     if (start != 0 && path != NULL && strlen(path) > 0) {
 
-        uint64_t base = _find_library_space_base(pid, start, page_size);
+        uint64_t base = frida_find_library_space_base(pid, start, page_size);
 
         if (base != 0) {
             int fd = open(path, O_RDONLY);
@@ -48,6 +48,7 @@ void anti_frida() {
 }
 
 bool str_has_prefix(const char *str1, const char *str2) {
+    //fixme, mem error
     const char *x = strstr(str1, str2);
     return x == str1;
 }
@@ -68,6 +69,7 @@ uint64_t frida_find_library_base(pid_t pid, const char *library_name, char **lib
     fp = fopen(maps_path, "r");
 
     free(maps_path);
+    maps_path = NULL;
 
     line = malloc(line_size);
     path = malloc(PATH_MAX);
@@ -117,14 +119,17 @@ uint64_t frida_find_library_base(pid_t pid, const char *library_name, char **lib
     }
 
     free(path);
+    path = NULL;
     free(line);
+    line = NULL;
 
     fclose(fp);
+    fp = NULL;
 
     return result;
 }
 
-uint64_t _find_library_space_base(pid_t pid, uint64_t base,
+uint64_t frida_find_library_space_base(pid_t pid, uint64_t base,
                                   uint32_t page_size) {
     char maps_path[1000];
     FILE *fp;
@@ -141,12 +146,6 @@ uint64_t _find_library_space_base(pid_t pid, uint64_t base,
         uint64_t start;
         uint64_t end;
         int n;
-
-        //     if (strstr(line, "libc")) {
-        //       int x = strlen(line);
-        //       line[x - 1] = 0;
-        //       printf("> %s\n", line);
-        //     }
 
         n = sscanf(line, "%"
         PRIx64
@@ -179,8 +178,10 @@ uint64_t _find_library_space_base(pid_t pid, uint64_t base,
     }
 
     free(line);
+    line = NULL;
 
     fclose(fp);
+    fp = NULL;
 
     return last_end;
 }
@@ -188,8 +189,7 @@ uint64_t _find_library_space_base(pid_t pid, uint64_t base,
 
 JNIEXPORT jstring JNICALL
 Java_com_tg_anti_MainActivity_AntiFrida(JNIEnv *env, jclass clazz) {
-    anti_frida();
+    anti_frida(); // can't detect frida.
     jstring jresult = ( *env)->NewStringUTF(env, "security");
     return jresult;
-// TODO
 }

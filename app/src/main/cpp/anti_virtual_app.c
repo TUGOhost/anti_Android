@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include "jni_utils.h"
 #include "logging.h"
 
@@ -45,6 +46,9 @@ bool detecte_parent_dir(JNIEnv *env) {
             }
         }
     }
+
+    free(path);
+    path = NULL;
 
     return result;
 }
