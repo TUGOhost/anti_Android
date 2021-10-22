@@ -56,9 +56,9 @@ bool str_has_prefix(const char *str1, const char *str2) {
 // copy from https://github.com/frida/frida-core/blob/836d254614d836e39d17418e3b864c8b5862bf9b/src/linux/frida-helper-backend-glue.c#L3014
 uint64_t frida_find_library_base(pid_t pid, const char *library_name, char **library_path) {
     uint64_t result = 0;
-    char *maps_path;
+    char maps_path[1000];
     FILE *fp;
-    const uint64_t line_size = 1024 + PATH_MAX;
+    const size_t line_size = 1024 + PATH_MAX;
     char *line, *path;
 
     if (library_path != NULL)
@@ -66,10 +66,9 @@ uint64_t frida_find_library_base(pid_t pid, const char *library_name, char **lib
 
     sprintf(maps_path, "/proc/%d/maps", pid);
 
+    //maps_path = "/proc/self/maps";
     fp = fopen(maps_path, "r");
 
-    free(maps_path);
-    maps_path = NULL;
 
     line = malloc(line_size);
     path = malloc(PATH_MAX);
@@ -78,9 +77,15 @@ uint64_t frida_find_library_base(pid_t pid, const char *library_name, char **lib
         uint64_t start;
         int n;
 
+        path[0] = 0;
         n = sscanf(line, "%"
         PRIx64
         "-%*x %*s %*x %*s %*s %s", &start, path);
+
+        if (n != 2) {
+            continue;
+        }
+
         if (n == 1)
             continue;
 //g_assert (n == 2);
@@ -90,17 +95,18 @@ uint64_t frida_find_library_base(pid_t pid, const char *library_name, char **lib
 
         if (strcmp(path, library_name) == 0) {
             result = start;
-            if (library_path != NULL)
+            if (library_path != NULL) {
                 *library_path = strdup(path);
+            }
         }
-#ifdef HAVE_ANDROID
+/*#ifdef HAVE_ANDROID
             else if (g_str_has_prefix (path, "/system_root") && strcmp (path + strlen ("/system_root"), library_name) == 0)
                 {
                   result = start;
                   if (library_path != NULL)
                     *library_path = g_strdup (path);
                 }
-#endif
+#endif*/
         else {
             char *p = strrchr(path, '/');
             if (p != NULL) {

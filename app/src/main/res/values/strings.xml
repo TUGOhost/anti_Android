@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">antiTest</string>
+    <string name="app_name">anti</string>
     <string name="frida">frida</string>
     <string name="xposed">xposed</string>
     <string name="dualApp">dualApp</string>

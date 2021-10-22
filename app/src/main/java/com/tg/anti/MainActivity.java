@@ -6,6 +6,10 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
+    static {
+        System.loadLibrary("native-lib");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -13,7 +17,6 @@ public class MainActivity extends Activity {
 
         TextView frida = findViewById(R.id.frida);
         frida.setText(AntiFrida());
-
         TextView xposed = findViewById(R.id.xposed);
         xposed.setText(AntiXposed());
 
@@ -27,16 +30,14 @@ public class MainActivity extends Activity {
         memDump.setText(AntiMemDump());
 
         TextView virtualApp = findViewById(R.id.virtualApp);
-        virtualApp.setText(AntiVirtualApp());
+        // fixme
+        virtualApp.setText("AntiVirtualApp()");
 
         TextView emulator = findViewById(R.id.emulator);
         emulator.setText(AntiEmulator());
 
         TextView dualApp = findViewById(R.id.dualApp);
         dualApp.setText(AntiDualApp());
-    }
-    static {
-        System.loadLibrary("native-lib");
     }
 
 
