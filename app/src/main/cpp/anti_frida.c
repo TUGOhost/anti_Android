@@ -196,6 +196,6 @@ uint64_t frida_find_library_space_base(pid_t pid, uint64_t base,
 JNIEXPORT jstring JNICALL
 Java_com_tg_anti_MainActivity_AntiFrida(JNIEnv *env, jclass clazz) {
     anti_frida(); // can't detect frida.
-    jstring jresult = ( *env)->NewStringUTF(env, "security");
+    jstring jresult = ( *env)->NewStringUTF(env, "anti frida....");
     return jresult;
 }
