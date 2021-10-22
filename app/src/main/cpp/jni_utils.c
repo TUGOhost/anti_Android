@@ -16,12 +16,22 @@ jobject getGlobalContext(JNIEnv *env)
     return context;
 }
 
-jobject callMethodByName(JNIEnv *env, jobject context, char * function_name,char * sig) {
-    jmethodID method = (*env)->GetMethodID(env, context, function_name, sig);
-    if (method == NULL) {
+jobject callMethodByName(JNIEnv *env, jobject context, char *function_name, char *sig) {
+    if (NULL == context) {
         return NULL;
     }
-    jobject ret = (*env)->NewObject(env, context, method);
+
+    jmethodID jmethodId;
+    jobject ret;
+
+    jclass clazz = (*env)->GetObjectClass(env, context);
+
+    jmethodId = (*env)->GetMethodID(env, clazz, function_name, sig);
+
+    if (jmethodId == NULL) {
+        return NULL;
+    }
+    ret = (*env)->CallObjectMethod(env, context, jmethodId);
     if (ret != NULL) {
         return ret;
     } else {
@@ -47,6 +57,9 @@ jstring getObjectField(JNIEnv *env, jobject context, char * field_name,char * si
 }
 
 char * jstring_to_char(JNIEnv *env, jstring string) {
+    if (NULL == string) {
+        return "";
+    }
     const char * nativeString = (*env)->GetStringUTFChars(env, string, 0);
     (*env)->ReleaseStringUTFChars(env, string, nativeString);
     return nativeString;
