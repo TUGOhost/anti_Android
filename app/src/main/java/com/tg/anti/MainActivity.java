@@ -1,6 +1,7 @@
 package com.tg.anti;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -30,8 +31,7 @@ public class MainActivity extends Activity {
         memDump.setText(AntiMemDump());
 
         TextView virtualApp = findViewById(R.id.virtualApp);
-        // fixme
-        virtualApp.setText("AntiVirtualApp()");
+        virtualApp.setText(AntiVirtualApp());
 
         TextView emulator = findViewById(R.id.emulator);
         emulator.setText(AntiEmulator());
