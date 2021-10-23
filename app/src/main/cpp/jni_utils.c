@@ -4,15 +4,17 @@
 
 #include "jni_utils.h"
 
-jobject getGlobalContext(JNIEnv *env)
-{
+jobject getGlobalContext(JNIEnv *env) {
 
-    jclass activityThread = (*env)->FindClass(env,"android/app/ActivityThread");
-    jmethodID currentActivityThread = (*env)->GetStaticMethodID(env,activityThread, "currentActivityThread", "()Landroid/app/ActivityThread;");
-    jobject at = (*env)->CallStaticObjectMethod(env,activityThread, currentActivityThread);
+    jclass activityThread = (*env)->FindClass(env, "android/app/ActivityThread");
+    jmethodID currentActivityThread = (*env)->GetStaticMethodID(env, activityThread,
+                                                                "currentActivityThread",
+                                                                "()Landroid/app/ActivityThread;");
+    jobject at = (*env)->CallStaticObjectMethod(env, activityThread, currentActivityThread);
 
-    jmethodID getApplication = (*env)->GetMethodID(env,activityThread, "getApplication", "()Landroid/app/Application;");
-    jobject context = (*env)->CallObjectMethod(env,at, getApplication);
+    jmethodID getApplication = (*env)->GetMethodID(env, activityThread, "getApplication",
+                                                   "()Landroid/app/Application;");
+    jobject context = (*env)->CallObjectMethod(env, at, getApplication);
     return context;
 }
 
@@ -39,15 +41,14 @@ jobject callMethodByName(JNIEnv *env, jobject context, char *function_name, char
     }
 }
 
-jstring getObjectField(JNIEnv *env, jobject context, char * field_name,char * sig) {
+jstring getObjectField(JNIEnv *env, jobject context, char *field_name, char *sig) {
     jfieldID fid;
     jobject i;
 
     jclass cls = (*env)->GetObjectClass(env, context);
 
-    fid = (*env)->GetFieldID(env, cls, field_name, "L");
-    if (fid == NULL)
-    {
+    fid = (*env)->GetFieldID(env, cls, field_name, sig);
+    if (fid == NULL) {
         return 0;
     }
 
@@ -56,17 +57,18 @@ jstring getObjectField(JNIEnv *env, jobject context, char * field_name,char * si
     return i;
 }
 
-char * jstring_to_char(JNIEnv *env, jstring string) {
+char *jstring_to_char(JNIEnv *env, jstring string) {
     if (NULL == string) {
         return "";
     }
-    const char * nativeString = (*env)->GetStringUTFChars(env, string, 0);
+    const char *nativeString = (*env)->GetStringUTFChars(env, string, 0);
     (*env)->ReleaseStringUTFChars(env, string, nativeString);
     return nativeString;
 }
 
 void delete_ref(JNIEnv *env, jobject context) {
-    jobjectRefType ref_type = context != NULL ? (*env)->GetObjectRefType(env, context) : JNIInvalidRefType;
+    jobjectRefType ref_type =
+            context != NULL ? (*env)->GetObjectRefType(env, context) : JNIInvalidRefType;
 
     if (ref_type == JNIGlobalRefType) {
         (*env)->DeleteGlobalRef(env, context);
