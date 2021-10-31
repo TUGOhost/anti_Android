@@ -38,6 +38,9 @@ public class MainActivity extends Activity {
 
         TextView dualApp = findViewById(R.id.dualApp);
         dualApp.setText(AntiDualApp());
+
+        TextView magisk = findViewById(R.id.magisk);
+        magisk.setText(AntiMagisk());
     }
 
 
@@ -64,4 +67,17 @@ public class MainActivity extends Activity {
 
     // anti dual app
     public static native String AntiDualApp();
+
+    // anti magisk
+    public static native String AntiMagisk();
+
+    public static native int haveSu();
+
+    public static native int haveMagicMount();
+
+    public static native int findMagiskdSocket();
+
+    public static native int testIoctl();
+
+    //static native String getPropsHash();
 }
