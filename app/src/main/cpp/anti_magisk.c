@@ -13,7 +13,9 @@
 
 #include "logging.h"
 #include "linux_syscall_support.h"
+#include "openssl/sha.h"
 
+#define TAG "MagiskDetector"
 
 static int major = -1;
 static int minor = -1;
@@ -21,7 +23,6 @@ static int minor = -1;
 // 可以通过检测riru的特征来进行检测magisk
 
 // 有问题，先注释掉。
-/*
 static inline void sscanfx(const char *restrict s, const char *restrict fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -32,7 +33,7 @@ static inline void sscanfx(const char *restrict s, const char *restrict fmt, ...
 static inline void scan_mountinfo() {
     FILE *fp = NULL;
     char line[PATH_MAX];
-    char mountinfo[] = '/proc/self/mountinfo';
+    char mountinfo[] = "/proc/self/mountinfo";
     int fd = sys_open(mountinfo, O_RDONLY, 0);
     if (fd < 0) {
         LOGE("cannot open %s", mountinfo);
@@ -165,6 +166,22 @@ static inline int pts_open(char *slave_name, size_t slave_name_size) {
     return -1;
 }
 
+static inline int test_ioctl() {
+    char pts_slave[PATH_MAX];
+    int fd = pts_open(pts_slave, sizeof(pts_slave));
+    if (fd == -1) return -1;
+
+    int re = -1;
+    int fdm = sys_open(pts_slave, O_RDWR, 0);
+    if (fdm != -1) {
+        re = sys_ioctl(fdm, TIOCSTI, "vvb2060") == -1 ? errno : 0;
+        close(fdm);
+    }
+    close(fd);
+    LOGI("ioctl errno is %d", re);
+    return re;
+}
+
 
 void __system_property_read_callback(const prop_info *pi,
                                      void (*callback)(void *cookie, const char *name,
@@ -184,4 +201,110 @@ static void hash(uint8_t buffer[SHA512_DIGEST_LENGTH], const char *name, const c
             buffer[i] ^= out[i];
         }
     }
+}
+
+static void read_callback(void *cookie, const char *name, const char *value,
+                          uint32_t serial __unused){
+    hash(cookie, name, value);
+}
+
+static void callback(const struct prop_info *info, void *cookie) {
+    if (&__system_property_read_callback) {
+        __system_property_read_callback(info, &read_callback, cookie);
+    } else {
+        char name[PROP_NAME_MAX];
+        char value[PROP_NAME_MAX];
+        __system_property_read_callback(info, name, value);
+        hash(cookie, name, value);
+    }
+}
+
+static jint su = -1;
+
+__attribute__((__constructor__, __used__))
+static void before_load() {
+    char *path = getenv("PATH");
+    char *p = strtok(path, ":");
+    char supath[PATH_MAX];
+    do {
+        sprintf(supath, "%s/su", p);
+        if (access(supath, F_OK) == 0) {
+            LOGW("Found su at %s", supath);
+            su = 0;
+        }
+    } while ((p = strtok(NULL, ":")) != NULL);
+
+    scan_mountinfo();
+}
+
+static jint haveSu(JNIEnv *env __unused, jclass clazz __unused) {
+    return su;
+}
+
+static jint haveMagicMount(JNIEnv *env __unused, jclass clazz __unused) {
+    if (minor == -1 || major == -1) return -1;
+    return scan_maps();
+}
+
+static jint findMagiskdSocket(JNIEnv *env __unused, jclass clazz __unused) {
+    return scan_unix();
+}
+
+static jint testIoctl(JNIEnv *env __unused, jclass clazz __unused) {
+    int re = test_ioctl();
+    if (re > 0) {
+        if (re == EACCES) return 1;
+        else if (android_get_device_api_level() >= __ANDROID_API_O__) return 2;
+        else return 0;
+    }
+
+    return re;
+}
+
+/*static jstring getPropsHash(JNIEnv *env, jclass clazz __unused) {
+    uint8_t hash[SHA512_DIGEST_LENGTH] = {0};
+
+    __system_property_foreach(&callback, &hash);
+    char string[SHA512_CBLOCK + 1];
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+        sprintf(string + (i * 2), "%02hhx", hash[i]);
+    }
+    string[SHA512_CBLOCK] = 0;
+    return (*env)->NewStringUTF(env, string);
+
 }*/
+
+jint JNI_Onload(JavaVM *jvm, void *v __unused) {
+    JNIEnv  *env;
+    jclass clazz;
+
+    if ((*jvm)->GetEnv(jvm, (void **) &env, JNI_VERSION_1_6) != JNI_OK) {
+        return JNI_ERR;
+    }
+
+    if ((clazz = (*env)->FindClass(env, "com/tg/anti/MainActivity")) == NULL) {
+        return JNI_ERR;
+    }
+
+    JNINativeMethod methods[] = {
+            {"haveSu",            "()I",                  haveSu},
+            {"haveMagicMount",    "()I",                  haveMagicMount},
+            {"findMagiskdSocket", "()I",                  findMagiskdSocket},
+            {"testIoctl",         "()I",                  testIoctl},
+    };
+
+    if ((*env)->RegisterNatives(env, clazz, methods, 5) < 0) {
+        return JNI_ERR;
+    }
+
+    return JNI_VERSION_1_6;
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_tg_anti_MainActivity_AntiMagisk(JNIEnv *env, jclass clazz) {
+    jstring result = (*env)->NewStringUTF(env, "security");
+    if (haveSu(env, clazz) == 0 && haveMagicMount(env, clazz) > 0 && findMagiskdSocket(env, clazz) > 0) {
+        result = (*env)->NewStringUTF(env, "detected magisk");
+    }
+    return result;
+}
