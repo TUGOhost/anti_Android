@@ -6,15 +6,16 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include "mini_io/_mini_io.h"
 #include <sys/mman.h>
 
 #include "logging.h"
 
 static uint64_t frida_find_library_base(pid_t pid, const char *library_name,
-                                   char **library_path);
+                                        char **library_path);
 
 static uint64_t frida_find_library_space_base(pid_t pid, uint64_t base,
-                                         uint32_t page_size);
+                                              uint32_t page_size);
 
 /**
  * 使用frida的实现原理漏洞， frida会使用目标的libc来加载和调用自身的so文件实现注入的效果。
@@ -31,7 +32,7 @@ void anti_frida() {
         uint64_t base = frida_find_library_space_base(pid, start, page_size);
 
         if (base != 0) {
-            int fd = open(path, O_RDONLY);
+            int fd = _open(path, O_RDONLY);
             free(path);
             path = NULL;
             if (fd > 0) {
@@ -79,8 +80,8 @@ uint64_t frida_find_library_base(pid_t pid, const char *library_name, char **lib
 
         path[0] = 0;
         n = sscanf(line, "%"
-        PRIx64
-        "-%*x %*s %*x %*s %*s %s", &start, path);
+                         PRIx64
+                         "-%*x %*s %*x %*s %*s %s", &start, path);
 
         if (n != 2) {
             continue;
@@ -136,7 +137,7 @@ uint64_t frida_find_library_base(pid_t pid, const char *library_name, char **lib
 }
 
 uint64_t frida_find_library_space_base(pid_t pid, uint64_t base,
-                                  uint32_t page_size) {
+                                       uint32_t page_size) {
     char maps_path[1000];
     FILE *fp;
     const size_t line_size = 1024 + 1024;
@@ -154,10 +155,10 @@ uint64_t frida_find_library_space_base(pid_t pid, uint64_t base,
         int n;
 
         n = sscanf(line, "%"
-        PRIx64
-        "-%"
-        PRIx64
-        "", &start, &end);
+                         PRIx64
+                         "-%"
+                         PRIx64
+                         "", &start, &end);
         if (n != 2) {
             continue;
         }
