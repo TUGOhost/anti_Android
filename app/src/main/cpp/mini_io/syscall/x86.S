@@ -188,7 +188,7 @@ ENTRY_PRIVATE(_ptrace)
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset edx, 0
 
-    call    __dxkernel_syscall
+    call    __kernel_syscall
     pushl   %eax
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset eax, 0

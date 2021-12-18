@@ -26,7 +26,7 @@ ENTRY_PRIVATE(_lseek)
     ret
 END(_lseek)
 
-ENTRY_PRIVATE(__dxopenat)
+ENTRY_PRIVATE(__openat)
     movq    %rcx, %r10
     movl    $__NR_openat, %eax
     syscall
@@ -37,7 +37,7 @@ ENTRY_PRIVATE(__dxopenat)
     call    ___set_errno_internal
 1:
     ret
-END(__dxopenat)
+END(__openat)
 
 ENTRY_PRIVATE(_read)
     movl    $__NR_read, %eax
