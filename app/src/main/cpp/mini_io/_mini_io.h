@@ -17,6 +17,7 @@ int _close(int fd);
 ssize_t _write(int __fd, const void *__buf, size_t __count);
 ssize_t _read(int fd, void *buf, size_t count);
 off_t _lseek(int __fd, off_t __offset, int __whence);
+int _readlinkat(int , const char *, char *, size_t);
 
 
 bool _arm_on_x86();

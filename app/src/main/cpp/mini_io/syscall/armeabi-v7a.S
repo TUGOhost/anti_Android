@@ -78,3 +78,17 @@ ENTRY_PRIVATE(_ptrace)
     neg     r0, r0
     b       ___set_errno_internal
 END(_write)
+
+
+ENTRY_PRIVATE(_readlinkat)
+    mov     ip, r7
+    .cfi_register r7, ip
+    ldr     r7, =__NR_readlinkat
+    swi     #0
+    mov     r7, ip
+    .cfi_restore r7
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       __set_errno_internal
+END(_readlinkat)

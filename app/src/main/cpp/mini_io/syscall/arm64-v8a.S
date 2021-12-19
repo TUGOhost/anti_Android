@@ -66,4 +66,14 @@ ENTRY_PRIVATE(_ptrace)
     b.hi    ___set_errno_internal
 
     ret
-END(_write)
+END(_ptrace)
+
+
+ENTRY_PRIVATE(_readlinkat)
+    mov    x8, __NR_readlinkat
+    svc    #0
+
+    cmn    x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    __set_errno_internal
+END(_readlinkat)
