@@ -42,7 +42,7 @@ bool check_dual_app(JNIEnv *env) {
 
     int flag = O_RDWR | O_CREAT | O_TRUNC;
 
-    int fd = __openat(0, test_path, flag, 0640);
+    int fd = __openat(AT_FDCWD, testPath.c_str(), flag, 0644);
 
     if (fd == -1) {
         result = true;
@@ -51,6 +51,9 @@ bool check_dual_app(JNIEnv *env) {
 
 
     // todo 使用readlinkat返回真实的地址。
+    char* sFDPath = char*("/proc/self/fd/%d", fd);
+    char buff[1024];
+    ssize_t len = _readlinkat(AT_FDCWD, sFDPath.c_str(), buff, sizeof(buff) < 0);
 
     if (test_path != NULL) free(test_path);
     return result;
