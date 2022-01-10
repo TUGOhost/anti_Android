@@ -9,7 +9,7 @@
 
 #include "jni_utils.h"
 #include "logging.h"
-#include "_mini_io.h"
+#include "mini_io/_mini_io.h"
 #include "utils.h"
 
 bool check_dual_app(JNIEnv *);
@@ -42,7 +42,7 @@ bool check_dual_app(JNIEnv *env) {
 
     int flag = O_RDWR | O_CREAT | O_TRUNC;
 
-    int fd = __openat(AT_FDCWD, testPath.c_str(), flag, 0644);
+    int fd = __openat(AT_FDCWD, test_path, flag, 0644);
 
     if (fd == -1) {
         result = true;
