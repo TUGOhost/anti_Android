@@ -221,7 +221,7 @@ ENTRY_PRIVATE(_readlinkat)
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset ecx, 0
     pushl   %edx
-   .cfi_adjust_cfa_offset 4
+    .cfi_adjust_cfa_offset 4
     .cfi_rel_offset edx, 0
     pushl   %esi
     .cfi_adjust_cfa_offset 4
