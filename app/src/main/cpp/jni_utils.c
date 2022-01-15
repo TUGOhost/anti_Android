@@ -78,3 +78,18 @@ void delete_ref(JNIEnv *env, jobject context) {
         (*env)->DeleteWeakGlobalRef(env, context);
     }
 }
+
+char* get_data_dir(JNIEnv *env) {
+    jobject jcontext = getGlobalContext(env);
+    jobject japplication_info = callMethodByName(env, jcontext, "getApplicationInfo",
+                                                 "()Landroid/content/pm/ApplicationInfo;");
+    //fixme dat_dir is NULL
+    jstring jdata_dir = getObjectField(env, japplication_info, "dataDir",
+                                       "Ljava/lang/String;");
+
+    char *path = jstring_to_char(env, jdata_dir);
+
+    delete_ref(env, japplication_info);
+    delete_ref(env, jdata_dir);
+    return path;
+}

@@ -74,4 +74,17 @@ ENTRY_PRIVATE(_ptrace)
     call    ___set_errno_internal
 1:
     ret
-END(_write)
+END(_ptrace)
+
+ENTRY_PRIVATE(_readlinkat)
+    movq    %rcx, %r10
+    movl    $__NR_readlinkat, %eax
+    syscall
+    cmpq    $-MAX_ERRNO, %rax
+    jb      1f
+    negl    %eax
+    movl    %eax, %edi
+    call    __set_errno_internal
+1:
+    ret
+END(_readlinkat)

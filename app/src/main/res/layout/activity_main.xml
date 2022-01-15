@@ -183,7 +183,7 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/memDump"
+            android:text="@string/magisk"
             tools:layout_editor_absoluteX="87dp"
             tools:layout_editor_absoluteY="433dp"
             tools:ignore="MissingConstraints" />

@@ -26,16 +26,7 @@ Java_com_tg_anti_MainActivity_AntiVirtualApp(JNIEnv *env, jclass clazz) {
 bool detecte_parent_dir(JNIEnv *env) {
     bool result = false;
 
-    jobject jcontext = getGlobalContext(env);
-    jobject japplication_info = callMethodByName(env, jcontext, "getApplicationInfo",
-                                                 "()Landroid/content/pm/ApplicationInfo;");
-    //fixme dat_dir is NULL
-    jstring jdata_dir = getObjectField(env, japplication_info, "dataDir",
-                                       "Ljava/lang/String;");
-
-    char *path = jstring_to_char(env, jdata_dir);
-    delete_ref(env, japplication_info);
-    delete_ref(env, jdata_dir);
+    char* path = get_data_dir(env);
 
     for (int i = strlen(path); i > 0; i--) {
         if (path[i] != '/') {
