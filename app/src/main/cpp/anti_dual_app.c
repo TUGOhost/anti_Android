@@ -62,7 +62,6 @@ bool check_dual_app(JNIEnv *env) {
     char buff[1024];
 
     // 使用_readlinkat返回真实的地址。
-    // fixme
     ssize_t len = _readlinkat(AT_FDCWD, fd_Path, buff, sizeof(buff));
 
     if (len < 0) {
@@ -72,13 +71,20 @@ bool check_dual_app(JNIEnv *env) {
 
     buff[len] = '\0';
 
+    int count_file = 0;
+    // todo
     for (int i = strlen(buff); i > 0; i--) {
         if (buff[i] != '/') {
             buff[i] = '\0';
         } else {
-            if (access(buff, R_OK) == 0) {
-                result = true;
-                break;
+            if (count_file == 0) {
+                count_file ++;
+            } else {
+                if (access(buff, R_OK) == 0) {
+
+                    result = true;
+                    break;
+                }
             }
         }
     }
