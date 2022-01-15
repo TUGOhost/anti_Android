@@ -75,5 +75,5 @@ ENTRY_PRIVATE(_readlinkat)
 
     cmn    x0, #(MAX_ERRNO + 1)
     cneg    x0, x0, hi
-    b.hi    __set_errno_internal
+    b.hi    ___set_errno_internal
 END(_readlinkat)

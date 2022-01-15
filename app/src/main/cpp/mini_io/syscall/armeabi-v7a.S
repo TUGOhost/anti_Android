@@ -27,7 +27,7 @@ ENTRY_PRIVATE(_lseek)
     b       ___set_errno_internal
 END(_lseek)
 
-ENTRY_PRIVATE(__dxopenat)
+ENTRY_PRIVATE(__openat)
     mov     ip, r7
     .cfi_register r7, ip
     ldr     r7, =__NR_openat
@@ -38,7 +38,7 @@ ENTRY_PRIVATE(__dxopenat)
     bxls    lr
     neg     r0, r0
     b       ___set_errno_internal
-END(__dxopenat)
+END(__openat)
 
 ENTRY_PRIVATE(_read)
     mov     ip, r7

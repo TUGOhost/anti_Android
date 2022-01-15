@@ -64,7 +64,7 @@ ENTRY_PRIVATE(_lseek)
     ret
 END(_lseek)
 
-ENTRY_PRIVATE(__dxopenat)
+ENTRY_PRIVATE(__openat)
     pushl   %ebx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
@@ -103,7 +103,7 @@ ENTRY_PRIVATE(__dxopenat)
     popl    %ecx
     popl    %ebx
     ret
-END(__dxopenat)
+END(__openat)
 
 ENTRY_PRIVATE(_read)
     pushl   %ebx
