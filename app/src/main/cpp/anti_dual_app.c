@@ -14,11 +14,12 @@
 #include "utils.h"
 
 bool check_dual_app(JNIEnv *);
+bool check_android_for_work(JNIEnv *);
 
 JNIEXPORT jstring JNICALL
 Java_com_tg_anti_MainActivity_AntiDualApp(JNIEnv *env, jclass clazz) {
     jstring jresult = (*env)->NewStringUTF(env, "security");
-    bool result = check_dual_app(env);
+    bool result = check_dual_app(env) || check_android_for_work(env);
     if (result) {
         jresult = (*env)->NewStringUTF(env, "detected dual app");
     }
