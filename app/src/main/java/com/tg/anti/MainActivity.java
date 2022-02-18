@@ -1,7 +1,6 @@
 package com.tg.anti;
 
 import android.app.Activity;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.widget.TextView;
 

@@ -93,3 +93,38 @@ bool check_dual_app(JNIEnv *env) {
 
     return result;
 }
+
+bool check_android_for_work(JNIEnv *env) {
+    char *data_path = "/data/data/";
+
+    char *data_dir_path = get_data_dir(env);
+
+    bool result = false;
+
+    if (strstr(data_dir_path, data_path) != NULL) {
+        // android 4.x 5.0
+        int count_file = 0;
+        for (int i = strlen(data_dir_path); i > 0; i--) {
+            if (data_dir_path[i] != '/') {
+                data_dir_path[i] = '\0';
+            } else {
+                if (count_file == 0) {
+                    count_file ++;
+                } else {
+                    if (access(data_dir_path, R_OK) == 0) {
+
+                        result = true;
+                        break;
+                    }
+                }
+            }
+        }
+    } else {
+        // android 6.0 +
+        if (data_dir_path[11] != '0') {
+            result = true;
+        }
+    }
+
+    return result;
+}

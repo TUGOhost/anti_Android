@@ -8,5 +8,5 @@
     <string name="debug">debug</string>
     <string name="root">root</string>
     <string name="virtualApp">virtualApp</string>
-    <string name="magisk">virtualApp</string>
+    <string name="magisk">magisk</string>
 </resources>
