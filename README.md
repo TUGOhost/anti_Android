@@ -16,6 +16,8 @@ anti frida的灵感也是来自于这里。就是将mmap一个只读的libc到ma
 ![](imgs/2.png)
 ![](imgs/3.png)
 
+`Anti Frida`只对frida attach模式攻击的对抗。
+
 ## Anti Xposed/like Xposed
 
 ## Anti Root
@@ -23,6 +25,8 @@ anti frida的灵感也是来自于这里。就是将mmap一个只读的libc到ma
 ## Anti Debug
 
 ## Anti MemDump
+思路来源：https://github.com/darvincisec/AntiDebugandMemoryDump
+- 使用监视相关文件
 
 ## Anti Virtual App/Multi Run
 
@@ -31,5 +35,9 @@ Virtual App 会在自己的文件系统中创建一个文件目录，通过这�
 思路来自：https://juejin.cn/post/6964673582924300296#heading-18
 ![](imgs/4.png)
 ![](imgs/5.png)
+
+### Anti Multi Run
+思路来源：https://bbs.pediy.com/thread-255212.htm
+基于svc来获得app的安装目录，防止被hook（除内核层面）。
 
 ## Anti Emulator

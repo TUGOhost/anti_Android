@@ -23,6 +23,7 @@ static int minor = -1;
 // 可以通过检测riru的特征来进行检测magisk
 
 // 有问题，先注释掉。
+/*
 static inline void sscanfx(const char *restrict s, const char *restrict fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -272,7 +273,7 @@ static jint testIoctl(JNIEnv *env __unused, jclass clazz __unused) {
     string[SHA512_CBLOCK] = 0;
     return (*env)->NewStringUTF(env, string);
 
-}*/
+}*//*
 
 jint JNI_Onload(JavaVM *jvm, void *v __unused) {
     JNIEnv  *env;
@@ -298,13 +299,13 @@ jint JNI_Onload(JavaVM *jvm, void *v __unused) {
     }
 
     return JNI_VERSION_1_6;
-}
+}*/
 
 JNIEXPORT jstring JNICALL
 Java_com_tg_anti_MainActivity_AntiMagisk(JNIEnv *env, jclass clazz) {
     jstring result = (*env)->NewStringUTF(env, "security");
-    if (haveSu(env, clazz) == 0 && haveMagicMount(env, clazz) > 0 && findMagiskdSocket(env, clazz) > 0) {
+    /*if (haveSu(env, clazz) == 0 && haveMagicMount(env, clazz) > 0 && findMagiskdSocket(env, clazz) > 0) {
         result = (*env)->NewStringUTF(env, "detected magisk");
-    }
+    }*/
     return result;
 }

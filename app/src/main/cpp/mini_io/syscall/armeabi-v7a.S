@@ -92,3 +92,55 @@ ENTRY_PRIVATE(_readlinkat)
     neg     r0, r0
     b       ___set_errno_internal
 END(_readlinkat)
+
+ENTRY_PRIVATE(_nanosleep)
+    mov     ip, r7
+    .cfi_register r7, ip
+    ldr     r7, =__NR_nanosleep
+    swi     #0
+    mov     r7, ip
+    .cfi_restore r7
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       ___set_errno_internal
+END(_nanosleep)
+
+ENTRY_PRIVATE(_inotify_init1)
+    mov     ip, r7
+    .cfi_register r7, ip
+    ldr     r7, =__NR_inotify_init1
+    swi     #0
+    mov     r7, ip
+    .cfi_restore r7
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       ___set_errno_internal
+END(_inotify_init1)
+
+ENTRY_PRIVATE(_inotify_add_watch)
+    mov     ip, r7
+    .cfi_register r7, ip
+    ldr     r7, =__NR_inotify_add_watch
+    swi     #0
+    mov     r7, ip
+    .cfi_restore r7
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       ___set_errno_internal
+END(_inotify_add_watch)
+
+ENTRY_PRIVATE(_inotify_rm_watch)
+    mov     ip, r7
+    .cfi_register r7, ip
+    ldr     r7, =__NR_inotify_rm_watch
+    swi     #0
+    mov     r7, ip
+    .cfi_restore r7
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       ___set_errno_internal
+END(_inotify_rm_watch)

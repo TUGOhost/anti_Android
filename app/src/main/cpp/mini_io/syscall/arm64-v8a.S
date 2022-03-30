@@ -79,3 +79,47 @@ ENTRY_PRIVATE(_readlinkat)
 
     ret
 END(_readlinkat)
+
+ENTRY_PRIVATE(_nanosleep)
+    mov     x8, __NR_nanosleep
+    svc     #0
+
+    cmn     x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    ___set_errno_internal
+
+    ret
+END(_nanosleep)
+
+ENTRY_PRIVATE(_inotify_init1)
+    mov     x8, __NR_inotify_init1
+    svc     #0
+
+    cmn     x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    ___set_errno_internal
+
+    ret
+END(_inotify_init1)
+
+ENTRY_PRIVATE(_inotify_add_watch)
+    mov     x8, __NR_inotify_add_watch
+    svc     #0
+
+    cmn     x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    ___set_errno_internal
+
+    ret
+END(_inotify_add_watch)
+
+ENTRY_PRIVATE(_inotify_rm_watch)
+    mov     x8, __NR_inotify_rm_watch
+    svc     #0
+
+    cmn     x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    ___set_errno_internal
+
+    ret
+END(_inotify_rm_watch)

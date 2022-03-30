@@ -28,16 +28,19 @@ bool detecte_parent_dir(JNIEnv *env) {
 
     char* path = get_data_dir(env);
 
-    for (int i = strlen(path); i > 0; i--) {
-        if (path[i] != '/') {
-            path[i] = '\0';
-        } else {
-            if (access(path, R_OK) == 0) {
-                result = true;
-                break;
+    if (path != NULL) {
+        for (int i = strlen(path); i > 0; i--) {
+            if (path[i] != '/') {
+                path[i] = '\0';
+            } else {
+                if (access(path, R_OK) == 0) {
+                    result = true;
+                    break;
+                }
             }
         }
     }
+
 
     free(path);
     path = NULL;

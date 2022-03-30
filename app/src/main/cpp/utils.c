@@ -13,6 +13,7 @@ void ToastUtil(JNIEnv *env, jobject object, char *message){
     (*env)->CallVoidMethod(env,object,mid,toast_msg);
 }
 
+// bug
 size_t strcat2(char **dst_out, ...)
 {
     size_t len = 0, len_sub;

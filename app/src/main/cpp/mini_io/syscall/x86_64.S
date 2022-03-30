@@ -84,7 +84,55 @@ ENTRY_PRIVATE(_readlinkat)
     jb      1f
     negl    %eax
     movl    %eax, %edi
-    call    __set_errno_internal
+    call    ___set_errno_internal
 1:
     ret
 END(_readlinkat)
+
+ENTRY_PRIVATE(_nanosleep)
+    movl    $__NR_nanosleep, %eax
+    syscall
+    cmpq    $-MAX_ERRNO, %rax
+    jb      1f
+    negl    %eax
+    movl    %eax, %edi
+    call    ___set_errno_internal
+1:
+    ret
+END(_nanosleep)
+
+ENTRY_PRIVATE(_inotify_init1)
+    movl    $__NR_inotify_init1, %eax
+    syscall
+    cmpq    $-MAX_ERRNO, %rax
+    jb      1f
+    negl    %eax
+    movl    %eax, %edi
+    call    ___set_errno_internal
+1:
+    ret
+END(_inotify_init1)
+
+ENTRY_PRIVATE(_inotify_add_watch)
+    movl    $__NR_inotify_add_watch, %eax
+    syscall
+    cmpq    $-MAX_ERRNO, %rax
+    jb      1f
+    negl    %eax
+    movl    %eax, %edi
+    call    ___set_errno_internal
+1:
+    ret
+END(_inotify_add_watch)
+
+ENTRY_PRIVATE(_inotify_rm_watch)
+    movl    $__NR_inotify_rm_watch, %eax
+    syscall
+    cmpq    $-MAX_ERRNO, %rax
+    jb      1f
+    negl    %eax
+    movl    %eax, %edi
+    call    ___set_errno_internal
+1:
+    ret
+END(inotify_rm_watch)

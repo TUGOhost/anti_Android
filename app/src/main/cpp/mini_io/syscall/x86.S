@@ -244,7 +244,7 @@ ENTRY_PRIVATE(_readlinkat)
     jb      1f
     negl    %eax
     pushl   %eax
-    call    __set_errno_internal
+    call    ___set_errno_internal
     addl    $4, %esp
 1:
     popl    %esi
@@ -253,3 +253,127 @@ ENTRY_PRIVATE(_readlinkat)
     popl    %ebx
     ret
 END(_readlinkat)
+
+ENTRY_PRIVATE(_nanosleep)
+    pushl   %ebx
+    .cfi_def_cfa_offset 8
+    .cfi_rel_offset ebx, 0
+    pushl   %ecx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset ecx, 0
+
+    call    __kernel_syscall
+    pushl   %eax
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset eax, 0
+
+    mov     16(%esp), %ebx
+    mov     20(%esp), %ecx
+    movl    $__NR_nanosleep, %eax
+    call    *(%esp)
+    addl    $4, %esp
+
+    cmpl    $-MAX_ERRNO, %eax
+    jb      1f
+    negl    %eax
+    pushl   %eax
+    call    ___set_errno_internal
+    addl    $4, %esp
+1:
+    popl    %ecx
+    popl    %ebx
+    ret
+END(_nanosleep)
+
+ENTRY_PRIVATE(_inotify_init1)
+    pushl   %ebx
+    .cfi_def_cfa_offset 8
+    .cfi_rel_offset ebx, 0
+
+    call    __kernel_syscall
+    pushl   %eax
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset eax, 0
+
+    mov     12(%esp), %ebx
+    movl    $__NR_inotify_init1, %eax
+    call    *(%esp)
+    addl    $4, %esp
+
+    cmpl    $-MAX_ERRNO, %eax
+    jb      1f
+    negl    %eax
+    pushl   %eax
+    call    ___set_errno_internal
+    addl    $4, %esp
+1:
+    popl    %ebx
+    ret
+END(_inotify_init1)
+
+ENTRY_PRIVATE(_inotify_add_watch)
+    pushl   %ebx
+    .cfi_def_cfa_offset 8
+    .cfi_rel_offset ebx, 0
+    pushl   %ecx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset ecx, 0
+    pushl   %edx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset edx, 0
+
+    call    __kernel_syscall
+    pushl   %eax
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset eax, 0
+
+    mov     20(%esp), %ebx
+    mov     24(%esp), %ecx
+    mov     28(%esp), %edx
+    movl    $__NR_inotify_add_watch, %eax
+    call    *(%esp)
+    addl    $4, %esp
+
+    cmpl    $-MAX_ERRNO, %eax
+    jb      1f
+    negl    %eax
+    pushl   %eax
+    call    ___set_errno_internal
+    addl    $4, %esp
+1:
+    popl    %edx
+    popl    %ecx
+    popl    %ebx
+    ret
+END(_inotify_add_watch)
+
+ENTRY_PRIVATE(_inotify_rm_watch)
+    pushl   %ebx
+    .cfi_def_cfa_offset 8
+    .cfi_rel_offset ebx, 0
+    pushl   %ecx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset ecx, 0
+
+    call    __kernel_syscall
+    pushl   %eax
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset eax, 0
+
+    mov     16(%esp), %ebx
+    mov     20(%esp), %ecx
+    movl    $__NR_inotify_rm_watch, %eax
+    call    *(%esp)
+    addl    $4, %esp
+
+    cmpl    $-MAX_ERRNO, %eax
+    jb      1f
+    negl    %eax
+    pushl   %eax
+    call    ___set_errno_internal
+    addl    $4, %esp
+1:
+    popl    %ecx
+    popl    %ebx
+    ret
+END(_inotify_rm_watch)
