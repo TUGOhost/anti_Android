@@ -38,18 +38,21 @@ bool check_dual_app(JNIEnv *env) {
 
     char *separator = "/";
 
-    char *test_path;
-    size_t length = strcat2(&test_path, data_dir_path, separator, simple_name);
+    //char *test_path;
+    //size_t length = strcat2(&test_path, data_dir_path, separator, simple_name);
 
-    if (length < 0) {
+    /*if (length < 0) {
         return result;
-    }
+    }*/
+
+    strcat(data_dir_path, separator);
+    strcat(data_dir_path, simple_name);
 
     //if (test_path == NULL) return result;
 
     int flag = O_RDWR | O_CREAT | O_TRUNC;
 
-    int fd = __openat(AT_FDCWD, test_path, flag, 0644);
+    int fd = __openat(AT_FDCWD, data_dir_path, flag, 0644);
 
     if (fd == -1) {
         result = true;
@@ -90,7 +93,7 @@ bool check_dual_app(JNIEnv *env) {
         }
     }
 
-    if (test_path != NULL) free(test_path);
+    //if (test_path != NULL) free(test_path);
 
     return result;
 }

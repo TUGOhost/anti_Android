@@ -70,13 +70,13 @@ public class MainActivity extends Activity {
     // anti magisk
     public static native String AntiMagisk();
 
-    public static native int haveSu();
+    //public static native int haveSu();
 
-    public static native int haveMagicMount();
+    //public static native int haveMagicMount();
 
-    public static native int findMagiskdSocket();
+    //public static native int findMagiskdSocket();
 
-    public static native int testIoctl();
+    //public static native int testIoctl();
 
     //static native String getPropsHash();
 }

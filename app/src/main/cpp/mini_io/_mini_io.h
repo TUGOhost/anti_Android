@@ -18,6 +18,10 @@ ssize_t _write(int __fd, const void *__buf, size_t __count);
 ssize_t _read(int fd, void *buf, size_t count);
 off_t _lseek(int __fd, off_t __offset, int __whence);
 int _readlinkat(int , const char *, char *, size_t);
+int _nanosleep(const struct timespec *, struct timespec *);
+int _inotify_init1(int flags);
+int _inotify_add_watch(int , const char *, uint32_t );
+int _inotify_rm_watch(int, int);
 
 
 bool _arm_on_x86();
