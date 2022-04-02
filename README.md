@@ -28,6 +28,8 @@ anti frida的灵感也是来自于这里。就是将mmap一个只读的libc到ma
 思路来源：https://github.com/darvincisec/AntiDebugandMemoryDump
 - 使用监视相关文件
 
+更多详细内容，参考：https://s5rxx58djb.feishu.cn/docs/doccnEenEJJas6iQPjc83M0dLed
+
 ## Anti Virtual App/Multi Run
 
 ### Anti Virtual App
