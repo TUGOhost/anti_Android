@@ -7,7 +7,7 @@ ENTRY_PRIVATE(___close)
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
 
-    call    __dxkernel_syscall
+    call    __kernel_syscall
     pushl   %eax
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset eax, 0
@@ -39,7 +39,7 @@ ENTRY_PRIVATE(_lseek)
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset edx, 0
 
-    call    __dxkernel_syscall
+    call    __kernel_syscall
     pushl   %eax
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset eax, 0
@@ -78,7 +78,7 @@ ENTRY_PRIVATE(__openat)
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset esi, 0
 
-    call    __dxkernel_syscall
+    call    __kernel_syscall
     pushl   %eax
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset eax, 0
@@ -116,7 +116,7 @@ ENTRY_PRIVATE(_read)
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset edx, 0
 
-    call    __dxkernel_syscall
+    call    __kernel_syscall
     pushl   %eax
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset eax, 0
@@ -152,7 +152,7 @@ ENTRY_PRIVATE(_write)
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset edx, 0
 
-    call    __dxkernel_syscall
+    call    __kernel_syscall
     pushl   %eax
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset eax, 0
