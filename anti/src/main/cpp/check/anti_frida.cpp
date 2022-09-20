@@ -13,15 +13,15 @@
 
 
 void AntiFrida::check() {
-    char *libc_path;
+    char *libc_path = nullptr;
     int page_size = getpagesize();
     uint64_t  start = frida_find_library_base("libc", &libc_path);
 
-    if (start != 0 && !libc_path.empty()) {
+    if (start != 0 && nullptr != libc_path && strlen(libc_path) > 0) {
         uint64_t base = frida_find_library_space_base(start, page_size);
 
         if (base != 0) {
-            int fd = _open(libc_path.c_str(), O_RDONLY);
+            int fd = _open(libc_path, O_RDONLY);
 
             if (fd > 0) {
                 void *p = mmap((void *) base, page_size, PROT_READ, MAP_PRIVATE, fd, 0);
@@ -42,13 +42,13 @@ bool str_has_prefix(const char *str1, const char *str2) {
 }
 
 // copy from https://github.com/frida/frida-core/blob/836d254614d836e39d17418e3b864c8b5862bf9b/src/linux/frida-helper-backend-glue.c#L3014
-uint64_t AntiFrida::frida_find_library_base(std::string library_name, const char **library_path) {
+uint64_t AntiFrida::frida_find_library_base(std::string library_name, char **library_path) {
     uint64_t  result = 0;
     std::string maps_path = "/proc/self/maps";
     const std::size_t line_size = 1024 + PATH_MAX;
     char *line, *path;
 
-    if (nullptr != *library_path) {
+    if (nullptr != library_path) {
         *library_path = nullptr;
     }
 
