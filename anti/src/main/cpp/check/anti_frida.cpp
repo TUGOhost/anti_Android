@@ -13,7 +13,7 @@
 
 
 void AntiFrida::check() {
-    std::string libc_path;
+    char *libc_path;
     int page_size = getpagesize();
     uint64_t  start = frida_find_library_base("libc", &libc_path);
 
@@ -42,11 +42,15 @@ bool str_has_prefix(const char *str1, const char *str2) {
 }
 
 // copy from https://github.com/frida/frida-core/blob/836d254614d836e39d17418e3b864c8b5862bf9b/src/linux/frida-helper-backend-glue.c#L3014
-uint64_t AntiFrida::frida_find_library_base(std::string library_name, std::string *library_path) {
+uint64_t AntiFrida::frida_find_library_base(std::string library_name, const char **library_path) {
     uint64_t  result = 0;
     std::string maps_path = "/proc/self/maps";
     const std::size_t line_size = 1024 + PATH_MAX;
     char *line, *path;
+
+    if (nullptr != *library_path) {
+        *library_path = nullptr;
+    }
 
     FILE *fp = fopen(maps_path.c_str(), "r");
 
@@ -77,7 +81,7 @@ uint64_t AntiFrida::frida_find_library_base(std::string library_name, std::strin
         if (strcmp(path, library_name.c_str()) == 0) {
             result = start;
             if (library_path != nullptr) {
-                library_path = reinterpret_cast<std::string *>(strdup(path));
+                *library_path = strdup(path);
             }
         } else {
             char *p = strrchr(path, '/');
@@ -88,7 +92,7 @@ uint64_t AntiFrida::frida_find_library_base(std::string library_name, std::strin
                     if (next_char == '-' || next_char == '.') {
                         result = start;
                         if (library_path != nullptr) {
-                            library_path = reinterpret_cast<std::string *> (path);
+                            *library_path = strdup(path);
                         }
                     }
                 }
