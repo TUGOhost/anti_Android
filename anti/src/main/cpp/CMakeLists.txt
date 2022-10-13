@@ -33,6 +33,8 @@ add_library( # Sets the name of the library.
         check/anti_frida.h
         check/anti_dual_app.cpp
         check/anti_dual_app.h
+        check/anti_xposed.cpp
+        check/anti_xposed.h
 
         JNIHelper/utils/JavaObjectPointer.cpp
         JNIHelper/utils/JStringUtils.cpp
@@ -41,6 +43,18 @@ add_library( # Sets the name of the library.
 
         utils/JNIUtil.cpp
         utils/Utils.cpp
+
+        xposeddetector/art.h
+        xposeddetector/classloader.cpp
+        xposeddetector/classloader.h
+        xposeddetector/find_name.cpp
+        xposeddetector/find_name.h
+        xposeddetector/hash.cpp
+        xposeddetector/hash.h
+        xposeddetector/plt.h
+        xposeddetector/plt.c
+        xposeddetector/xposed.cpp
+        xposeddetector/xposed.h
         )
 
 # Searches for a specified prebuilt library and stores the path as a

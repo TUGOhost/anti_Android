@@ -2,7 +2,9 @@
 #include <string>
 #include "check/anti_frida.h"
 #include "check/anti_dual_app.h"
+#include "check/anti_xposed.h"
 #include "JNIHelper/JNIHelper.hpp"
+#include "xposeddetector/xposed.h"
 
 #define JNI_CLASS_NAME "com/tg/android/anti/NativeLib"
 
@@ -15,9 +17,18 @@ static jstring anti_frida(JNIEnv *env, jclass clazz) {
     return jh::createJString("anti frida...");
 }
 
-static jstring anti_xposed(JNIEnv *env, jclass clazz) {
+static jstring anti_L_xposed(JNIEnv *env, jclass clazz) {
+    AntiXposed antiXposed;
+    if (antiXposed.get_xposed_status(env, android_get_device_api_level()) == NO_XPOSED) {
+        return jh::createJString("security");
+    } else if (xposed_status == FOUND_XPOSED) {
+        return jh::createJString("FOUND_XPOSED");
+    } else if (xposed_status == ANTIED_XPOSED) {
+        return jh::createJString("ANTIED_XPOSED");
+    } else if (xposed_status == CAN_NOT_ANTI_XPOSED) {
+        return jh::createJString("CAN_NOT_ANTI_XPOSED");
+    }
 
-    return jh::createJString("security");
 }
 
 static jstring anti_root(JNIEnv *env, jclass clazz) {
@@ -58,7 +69,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNINativeMethod  m[] =
             {
             {"AntiFrida", "()Ljava/lang/String;", (void *) anti_frida},
-            {"AntiXposed", "()Ljava/lang/String;", (void *) anti_xposed},
+            {"AntiXposed", "()Ljava/lang/String;", (void *) anti_L_xposed},
             {"AntiRoot", "()Ljava/lang/String;", (void *) anti_root},
             {"AntiDebug", "()Ljava/lang/String;", (void *) anti_debug},
             {"AntiMemDump", "()Ljava/lang/String;", (void *) anti_mem_dump},

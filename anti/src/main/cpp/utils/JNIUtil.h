@@ -12,9 +12,9 @@ class JNIUtil {
 public:
     static jobject getGlobalContext(JNIEnv *env);
 
-    static jobject callMethodByName(JNIEnv *env, jobject context, char *function_name, char *sig);
+    static jobject callMethodByName(JNIEnv *env, jobject context, std::string function_name, std::string sig);
 
-    static jstring getObjectField(JNIEnv *env, jobject context, char *field_name, char *sig);
+    static jstring getObjectField(JNIEnv *env, jobject context, std::string field_name, std::string sig);
 
     static void delete_ref(JNIEnv *env, jobject context);
 

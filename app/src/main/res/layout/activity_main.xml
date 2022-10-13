@@ -114,26 +114,6 @@
             tools:ignore="MissingConstraints" />
     </TableRow>
 
-    <TableRow>
-        <TextView />
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/virtualApp"
-            tools:layout_editor_absoluteX="86dp"
-            tools:layout_editor_absoluteY="357dp"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/virtualApp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            tools:layout_editor_absoluteX="265dp"
-            tools:layout_editor_absoluteY="360dp"
-            tools:ignore="MissingConstraints" />
-    </TableRow>
 
     <TableRow>
         <TextView />
@@ -176,27 +156,5 @@
             tools:layout_editor_absoluteY="432dp"
             tools:ignore="MissingConstraints" />
     </TableRow>
-
-    <TableRow>
-        <TextView />
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/magisk"
-            tools:layout_editor_absoluteX="87dp"
-            tools:layout_editor_absoluteY="433dp"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/magisk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            tools:layout_editor_absoluteX="267dp"
-            tools:layout_editor_absoluteY="432dp"
-            tools:ignore="MissingConstraints" />
-    </TableRow>
-
 
 </TableLayout>

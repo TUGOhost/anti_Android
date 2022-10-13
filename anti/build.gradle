@@ -14,9 +14,9 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++11"
-                arguments "-DANDROID_STL=c++_static",
+                arguments "-DANDROID_STL=c++_static"
                         //这里使用的地址就是上面查询到的 ninja 的地址
-                        "-DCMAKE_MAKE_PROGRAM=/usr/bin/ninja"
+                        //"-DCMAKE_MAKE_PROGRAM=/usr/bin/ninja"
             }
         }
         ndk {

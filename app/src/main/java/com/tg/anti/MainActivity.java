@@ -30,6 +30,10 @@ public class MainActivity extends Activity {
         emulator.setText(AntiEmulator());
 
         TextView dualApp = findViewById(R.id.dualApp);
-        dualApp.setText(AntiDualApp());
+        dualApp.setText(check());
+    }
+
+    public  String check() {
+        return "security";
     }
 }

@@ -18,7 +18,7 @@ jobject JNIUtil::getGlobalContext(JNIEnv *env) {
     return context;
 }
 
-jobject JNIUtil::callMethodByName(JNIEnv *env, jobject context, char *function_name, char *sig) {
+jobject JNIUtil::callMethodByName(JNIEnv *env, jobject context, std::string function_name, std::string sig) {
     if (nullptr == context) {
         return nullptr;
     }
@@ -28,7 +28,7 @@ jobject JNIUtil::callMethodByName(JNIEnv *env, jobject context, char *function_n
 
     jclass clazz = env->GetObjectClass(context);
 
-    jmethodId = env->GetMethodID(clazz, function_name, sig);
+    jmethodId = env->GetMethodID(clazz, function_name.c_str(), sig.c_str());
 
     if (jmethodId == nullptr) {
         return nullptr;
@@ -41,13 +41,13 @@ jobject JNIUtil::callMethodByName(JNIEnv *env, jobject context, char *function_n
     }
 }
 
-jstring JNIUtil::getObjectField(JNIEnv *env, jobject context, char *field_name, char *sig) {
+jstring JNIUtil::getObjectField(JNIEnv *env, jobject context, std::string field_name, std::string sig) {
     jfieldID fid;
     jobject i;
 
     jclass cls = env->GetObjectClass(context);
 
-    fid = env->GetFieldID(cls, field_name, sig);
+    fid = env->GetFieldID(cls, field_name.c_str(), sig.c_str());
     if (fid == nullptr) {
         return 0;
     }
@@ -72,11 +72,15 @@ void JNIUtil::delete_ref(JNIEnv *env, jobject context) {
 
 std::string  JNIUtil::get_data_dir(JNIEnv *env) {
     jobject jcontext = getGlobalContext(env);
-    jobject japplication_info = callMethodByName(env, jcontext, "getApplicationInfo",
-                                                 "()Landroid/content/pm/ApplicationInfo;");
+    std::string method_name_getApplicationInfo = "getApplicationInfo";
+    std::string method_name_dataDir = "dataDir";
+    std::string signal_ApplicationInfo = "()Landroid/content/pm/ApplicationInfo";
+    std::string signal_String = "Ljava/lang/String;";
+    jobject japplication_info = callMethodByName(env, jcontext, method_name_getApplicationInfo,
+                                                 signal_ApplicationInfo);
 
-    jstring jdata_dir = getObjectField(env, japplication_info, "dataDir",
-                                       "Ljava/lang/String;");
+    jstring jdata_dir = getObjectField(env, japplication_info, method_name_dataDir,
+                                       signal_String);
 
     std::string path = jh::jstringToStdString(jdata_dir);
 

@@ -191,7 +191,6 @@ namespace jh
     /**
     * Structure that describes the types of custom java arrays.
     */
-    template<>
     template<class JavaType>
     struct ToJavaType<JavaArray<JavaType>> : public JavaArray<JavaType>
     {
