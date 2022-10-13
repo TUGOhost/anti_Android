@@ -31,6 +31,10 @@ namespace jh
         {
             return T::signature();
         }
+        static jobject initValue()
+        {
+            return nullptr;
+        }
 
         static std::string className()
         {
@@ -46,7 +50,9 @@ namespace jh
     {
         using Type = void;
         using CallReturnType = void;
-
+        static jobject initValue() {
+            return nullptr;
+        }
         static std::string signature()
         {
             return "V";
@@ -61,7 +67,9 @@ namespace jh
     {
         using Type = jboolean;
         using CallReturnType = jboolean;
-
+        static bool initValue() {
+            return false;
+        }
         static std::string signature()
         {
             return "Z";
@@ -76,7 +84,9 @@ namespace jh
     {
         using Type = jint;
         using CallReturnType = jint;
-
+        static int initValue() {
+            return 0;
+        }
         static std::string signature()
         {
             return "I";
@@ -91,7 +101,9 @@ namespace jh
     {
         using Type = jlong;
         using CallReturnType = jlong;
-
+        static long initValue() {
+            return 0;
+        }
         static std::string signature()
         {
             return "J";
@@ -106,7 +118,9 @@ namespace jh
     {
         using Type = jfloat;
         using CallReturnType = jfloat;
-
+        static float initValue() {
+            return 0;
+        }
         static std::string signature()
         {
             return "F";
@@ -121,7 +135,9 @@ namespace jh
     {
         using Type = jdouble;
         using CallReturnType = jdouble;
-
+        static double initValue() {
+            return 0;
+        }
         static std::string signature()
         {
             return "D";
@@ -161,6 +177,10 @@ namespace jh
     template<>
     struct ToJavaType<jstring> : public JPointerLike<jstring>
     {
+        static jstring initValue()
+        {
+            return nullptr;
+        }
         static std::string className()
         {
             return "java/lang/String";

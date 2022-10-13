@@ -131,10 +131,11 @@ namespace jh
     * @return Some value of ReturnType type returned by the specified method.
     */
     template<class ReturnType, class ... ArgumentTypes>
-    typename ToJavaType<ReturnType>::Type callMethod(jobject instance, std::string methodName, typename ToJavaType<ArgumentTypes>::Type ... arguments)
+    typename ToJavaType<ReturnType>::Type callMethod(jobject instance, std::string methodName,bool autoClearException,typename ToJavaType<ArgumentTypes>::Type ... arguments)
     {
         using RealReturnType = typename ToJavaType<ReturnType>::Type;
-
+        if (instance == nullptr)
+            return RealReturnType();
         JNIEnv* env = getCurrentJNIEnvironment();
 
         std::string methodSignature = getJavaMethodSignature<ReturnType, ArgumentTypes...>();

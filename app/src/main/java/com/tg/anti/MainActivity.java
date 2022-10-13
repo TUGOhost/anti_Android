@@ -3,6 +3,7 @@ package com.tg.anti;
 import static com.tg.android.anti.NativeLib.*;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ public class MainActivity extends Activity {
 
         TextView frida = findViewById(R.id.frida);
         frida.setText(AntiFrida());
+
         TextView xposed = findViewById(R.id.xposed);
         xposed.setText(AntiXposed());
 
@@ -30,7 +32,11 @@ public class MainActivity extends Activity {
         emulator.setText(AntiEmulator());
 
         TextView dualApp = findViewById(R.id.dualApp);
-        dualApp.setText(check());
+        dualApp.setText(AntiDualApp());
+
+        String dataDir = this.getApplication().getApplicationInfo().dataDir;
+
+        check();
     }
 
     public  String check() {

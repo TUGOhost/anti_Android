@@ -35,6 +35,13 @@
 
 namespace jh
 {
+
+    /**
+     * 初始化方法
+     * @param vm
+     */
+    void onLoad(JavaVM *vm);
+
     /**
     * Returns the pointer to the Java Virtual Machine (JVM).
     *
@@ -51,6 +58,8 @@ namespace jh
     * @warning Can be nullptr if called in non-java or unattached thread.
     */
     JNIEnv* getCurrentJNIEnvironment();
+
+    jobject getCurrentApplication();
 
     /**
     * Utility class that ensures that JNI environment pointer exists while the object

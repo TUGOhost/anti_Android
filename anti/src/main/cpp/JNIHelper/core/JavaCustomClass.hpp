@@ -37,6 +37,10 @@
 #include <jni.h>
 #include <string>
 
+namespace jh{
+    jclass FindClass(const std::string& name);
+    void loadClassLoader();
+}
 /**
 * This macro magic tells the library about the existance of some android class.
 * This allows to perform java method signature deduction and some other stuff to happen.
@@ -46,7 +50,7 @@
 * the pointer to Java object (aka jobject). The programmer should carefully track
 * the types of Java objects pointers by himself.
 */
-#define JH_JAVA_CUSTOM_CLASS(CLASS_NAME_TOKEN, CLASS_PATH_STRING)               \
+#define JAVA_CLASS(CLASS_NAME_TOKEN, CLASS_PATH_STRING)               \
 struct CLASS_NAME_TOKEN                                                         \
 {                                                                               \
     static std::string className()                                              \
@@ -58,5 +62,4 @@ struct CLASS_NAME_TOKEN                                                         
         return "L" CLASS_PATH_STRING ";";                                       \
     }                                                                           \
 };
-
 #endif

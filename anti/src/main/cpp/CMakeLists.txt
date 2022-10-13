@@ -40,8 +40,8 @@ add_library( # Sets the name of the library.
         JNIHelper/utils/JStringUtils.cpp
         JNIHelper/native/JavaNativeMethod.cpp
         JNIHelper/core/JNIEnvironment.cpp
+        JNIHelper/core/JavaCustomClass.cpp
 
-        utils/JNIUtil.cpp
         utils/Utils.cpp
 
         xposeddetector/art.h
