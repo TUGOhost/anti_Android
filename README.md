@@ -19,7 +19,9 @@ anti frida的灵感也是来自于这里。就是将mmap一个只读的libc到ma
 `Anti Frida`只对frida attach模式攻击的对抗。
 
 ## Anti Xposed/like Xposed
-
+思路来源：
+- https://blog.canyie.top/2021/05/01/anti-magisk-xposed/
+- https://github.com/vvb2060/XposedDetector
 ## Anti Root
 
 ## Anti Debug
