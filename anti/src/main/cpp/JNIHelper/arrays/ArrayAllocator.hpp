@@ -11,8 +11,7 @@
 #include <jni.h>
 #include "../core/ErrorHandler.hpp"
 
-namespace jh
-{
+namespace jh {
     /**
     * Stub implementation of java array creation.
     */
@@ -23,10 +22,8 @@ namespace jh
     * Implementation of java boolean array creation.
     */
     template<class ElementType>
-    struct JavaArrayAllocator<jbooleanArray, ElementType>
-    {
-        static jbooleanArray create(JNIEnv* env, jsize size)
-        {
+    struct JavaArrayAllocator<jbooleanArray, ElementType> {
+        static jbooleanArray create(JNIEnv *env, jsize size) {
             return env->NewBooleanArray(size);
         }
     };
@@ -35,10 +32,8 @@ namespace jh
     * Implementation of java int array creation.
     */
     template<class ElementType>
-    struct JavaArrayAllocator<jintArray, ElementType>
-    {
-        static jintArray create(JNIEnv* env, jsize size)
-        {
+    struct JavaArrayAllocator<jintArray, ElementType> {
+        static jintArray create(JNIEnv *env, jsize size) {
             return env->NewIntArray(size);
         }
     };
@@ -47,10 +42,8 @@ namespace jh
     * Implementation of java long array creation.
     */
     template<class ElementType>
-    struct JavaArrayAllocator<jlongArray, ElementType>
-    {
-        static jlongArray create(JNIEnv* env, jsize size)
-        {
+    struct JavaArrayAllocator<jlongArray, ElementType> {
+        static jlongArray create(JNIEnv *env, jsize size) {
             return env->NewLongArray(size);
         }
     };
@@ -59,10 +52,8 @@ namespace jh
     * Implementation of java float array creation.
     */
     template<class ElementType>
-    struct JavaArrayAllocator<jfloatArray, ElementType>
-    {
-        static jfloatArray create(JNIEnv* env, jsize size)
-        {
+    struct JavaArrayAllocator<jfloatArray, ElementType> {
+        static jfloatArray create(JNIEnv *env, jsize size) {
             return env->NewFloatArray(size);
         }
     };
@@ -71,10 +62,8 @@ namespace jh
     * Implementation of java double array creation.
     */
     template<class ElementType>
-    struct JavaArrayAllocator<jdoubleArray, ElementType>
-    {
-        static jdoubleArray create(JNIEnv* env, jsize size)
-        {
+    struct JavaArrayAllocator<jdoubleArray, ElementType> {
+        static jdoubleArray create(JNIEnv *env, jsize size) {
             return env->NewDoubleArray(size);
         }
     };
@@ -85,10 +74,8 @@ namespace jh
     * @param ElementType Type of java object in the array.
     */
     template<class ElementType>
-    struct JavaArrayAllocator<jobjectArray, ElementType>
-    {
-        static jobjectArray create(JNIEnv* env, jsize size)
-        {
+    struct JavaArrayAllocator<jobjectArray, ElementType> {
+        static jobjectArray create(JNIEnv *env, jsize size) {
             std::string className = ToJavaType<ElementType>::className();
 
             jclass javaClass = env->FindClass(className.c_str());

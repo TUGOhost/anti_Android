@@ -8,33 +8,27 @@
 #include "../core/JNIEnvironment.hpp"
 #include "../utils/JavaObjectPointer.hpp"
 
-namespace jh
-{
+namespace jh {
     JavaObjectPointer::JavaObjectPointer()
-    : m_jobjectGlobalReference(nullptr)
-    {
+            : m_jobjectGlobalReference(nullptr) {
         // nothing to do here
     }
 
     JavaObjectPointer::JavaObjectPointer(jobject object)
-    : m_jobjectGlobalReference(nullptr)
-    {
+            : m_jobjectGlobalReference(nullptr) {
         reset(object);
     }
 
-    JavaObjectPointer::JavaObjectPointer(const JavaObjectPointer& other)
-    : m_jobjectGlobalReference(nullptr)
-    {
+    JavaObjectPointer::JavaObjectPointer(const JavaObjectPointer &other)
+            : m_jobjectGlobalReference(nullptr) {
         reset(other);
     }
 
-    JavaObjectPointer::~JavaObjectPointer()
-    {
+    JavaObjectPointer::~JavaObjectPointer() {
         release();
     }
 
-    JavaObjectPointer& JavaObjectPointer::operator=(const JavaObjectPointer& other)
-    {
+    JavaObjectPointer &JavaObjectPointer::operator=(const JavaObjectPointer &other) {
         if (&other == this)
             return *this;
 
@@ -43,8 +37,7 @@ namespace jh
         return *this;
     }
 
-    JavaObjectPointer& JavaObjectPointer::operator=(JavaObjectPointer&& other)
-    {
+    JavaObjectPointer &JavaObjectPointer::operator=(JavaObjectPointer &&other) {
         if (&other == this)
             return *this;
 
@@ -54,16 +47,14 @@ namespace jh
         return *this;
     }
 
-    JavaObjectPointer& JavaObjectPointer::operator=(const jobject other)
-    {
+    JavaObjectPointer &JavaObjectPointer::operator=(const jobject other) {
         reset(other);
 
         return *this;
     }
 
-    void JavaObjectPointer::reset(jobject object)
-    {
-        JNIEnv* env = getCurrentJNIEnvironment();
+    void JavaObjectPointer::reset(jobject object) {
+        JNIEnv *env = getCurrentJNIEnvironment();
 
         if (object) {
             object = env->NewGlobalRef(object);
@@ -76,23 +67,19 @@ namespace jh
         m_jobjectGlobalReference = object;
     }
 
-    void JavaObjectPointer::release()
-    {
+    void JavaObjectPointer::release() {
         reset(nullptr);
     }
 
-    jobject JavaObjectPointer::get() const
-    {
+    jobject JavaObjectPointer::get() const {
         return m_jobjectGlobalReference;
     }
 
-    JavaObjectPointer::operator jobject() const
-    {
+    JavaObjectPointer::operator jobject() const {
         return get();
     }
 
-    JavaObjectPointer::operator bool() const
-    {
+    JavaObjectPointer::operator bool() const {
         return !areEqual(get(), nullptr);
     }
 }

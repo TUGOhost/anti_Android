@@ -16,10 +16,10 @@
 
 
 JAVA_CLASS(JavaActivityThread, "android/app/ActivityThread")
+
 JAVA_CLASS(JavaApplication, "android/app/Application")
 
-namespace jh
-{
+namespace jh {
     static JniGlobalRef<jobject> *globalActivityThread;
     static JniGlobalRef<jobject> *globalApplication;
 
@@ -35,14 +35,13 @@ namespace jh
                 "currentActivityThread");
         globalActivityThread->set(activityThread);
         jobject application = jh::callMethod<JavaApplication>(activityThread, "getApplication",
-                                                                true);
+                                                              true);
         globalApplication->set(application);
         loadClassLoader();
 
     }
 
-    JavaVM* getJavaVM()
-    {
+    JavaVM *getJavaVM() {
         return jvm;
     }
 
@@ -50,12 +49,11 @@ namespace jh
         return globalApplication->get();
     }
 
-    JNIEnv* getCurrentJNIEnvironment()
-    {
-        JNIEnv* env = nullptr;
-        JavaVM* javaVM = getJavaVM();
+    JNIEnv *getCurrentJNIEnvironment() {
+        JNIEnv *env = nullptr;
+        JavaVM *javaVM = getJavaVM();
 
-        javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
+        javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
 
         if (env == nullptr) {
             reportInternalError("jni environment not found");
@@ -65,12 +63,11 @@ namespace jh
     }
 
     JNIEnvironmentGuarantee::JNIEnvironmentGuarantee()
-    : m_threadShouldBeDetached(false)
-    {
-        JNIEnv* env = nullptr;
-        JavaVM* javaVM = getJavaVM();
+            : m_threadShouldBeDetached(false) {
+        JNIEnv *env = nullptr;
+        JavaVM *javaVM = getJavaVM();
 
-        int getEnvStatus = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
+        int getEnvStatus = javaVM->GetEnv((void **) &env, JNI_VERSION_1_6);
 
         if (getEnvStatus == JNI_EDETACHED) {
             if (javaVM->AttachCurrentThread(&env, nullptr) != 0) {
@@ -87,8 +84,7 @@ namespace jh
         }
     }
 
-    JNIEnvironmentGuarantee::~JNIEnvironmentGuarantee()
-    {
+    JNIEnvironmentGuarantee::~JNIEnvironmentGuarantee() {
         if (m_threadShouldBeDetached) {
             getJavaVM()->DetachCurrentThread();
         }

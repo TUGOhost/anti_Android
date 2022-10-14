@@ -12,7 +12,8 @@ jobject newLocalRef(JNIEnv *env, void *object) {
         return nullptr;
     }
     if (NewLocalRef == nullptr) {
-        NewLocalRef = (jobject (*)(JNIEnv *, void *)) plt_dlsym("_ZN3art9JNIEnvExt11NewLocalRefEPNS_6mirror6ObjectE", nullptr);
+        NewLocalRef = (jobject (*)(JNIEnv *, void *)) plt_dlsym(
+                "_ZN3art9JNIEnvExt11NewLocalRefEPNS_6mirror6ObjectE", nullptr);
         //LOGD("NewLocalRef: %p", NewLocalRef);
     }
     if (NewLocalRef != nullptr) {
@@ -25,7 +26,8 @@ jobject newLocalRef(JNIEnv *env, void *object) {
 void deleteLocalRef(JNIEnv *env, jobject object) {
     static void (*DeleteLocalRef)(JNIEnv *, jobject) = nullptr;
     if (DeleteLocalRef == nullptr) {
-        DeleteLocalRef = (void (*)(JNIEnv *, jobject)) plt_dlsym("_ZN3art9JNIEnvExt14DeleteLocalRefEP8_jobject", nullptr);
+        DeleteLocalRef = (void (*)(JNIEnv *, jobject)) plt_dlsym(
+                "_ZN3art9JNIEnvExt14DeleteLocalRefEP8_jobject", nullptr);
         //LOGD("DeleteLocalRef: %p", DeleteLocalRef);
     }
     if (DeleteLocalRef != nullptr) {
@@ -57,7 +59,8 @@ private:
 };
 
 void classloader::checkGlobalRef(C_JNIEnv *env, jclass clazz) {
-    auto VisitRoots = (void (*)(void *, void *)) plt_dlsym("_ZN3art9JavaVMExt10VisitRootsEPNS_11RootVisitorE", nullptr);
+    auto VisitRoots = (void (*)(void *, void *)) plt_dlsym(
+            "_ZN3art9JavaVMExt10VisitRootsEPNS_11RootVisitorE", nullptr);
 
     if (VisitRoots == nullptr) {
         return;
@@ -68,9 +71,10 @@ void classloader::checkGlobalRef(C_JNIEnv *env, jclass clazz) {
     VisitRoots(jvm, &visitor);
 }
 
-class WeakClassLoaderVisitor: public art::IsMarkedVisitor {
+class WeakClassLoaderVisitor : public art::IsMarkedVisitor {
 public:
-    WeakClassLoaderVisitor(C_JNIEnv *env, jclass classLoader) : env_(env), classLoader_(classLoader) {
+    WeakClassLoaderVisitor(C_JNIEnv *env, jclass classLoader) : env_(env),
+                                                                classLoader_(classLoader) {
     }
 
     art::mirror::Object *IsMarked(art::mirror::Object *obj) override {
@@ -92,7 +96,8 @@ private:
 };
 
 void classloader::checkWeakGlobalRef(C_JNIEnv *env, jclass clazz) {
-    auto SweepJniWeakGlobals = (void (*)(void *, void *)) plt_dlsym("_ZN3art9JavaVMExt19SweepJniWeakGlobalsEPNS_15IsMarkedVisitorE", nullptr);
+    auto SweepJniWeakGlobals = (void (*)(void *, void *)) plt_dlsym(
+            "_ZN3art9JavaVMExt19SweepJniWeakGlobalsEPNS_15IsMarkedVisitorE", nullptr);
     if (SweepJniWeakGlobals == nullptr) {
         return;
     }

@@ -43,29 +43,24 @@
 #include <jni.h>
 #include "../core/JNIEnvironment.hpp"
 
-namespace jh
-{
+namespace jh {
     /**
     * Class that can automatically clear all created local java references.
     */
-    class LocalReferenceFrame
-    {
+    class LocalReferenceFrame {
     public:
         /**
         * Creates local frame with a capacity of 'frameSize' references. Default is 16.
         */
         LocalReferenceFrame(int frameSize = 16)
-        : m_frameSize(frameSize)
-        , m_framesCount(0)
-        {
+                : m_frameSize(frameSize), m_framesCount(0) {
             push();
         }
 
         /**
         * Pops all the created local frames.
         */
-        ~LocalReferenceFrame()
-        {
+        ~LocalReferenceFrame() {
             while (pop());
         }
 
@@ -75,8 +70,7 @@ namespace jh
         *
         * @return True if new frame was sucessfully created and false otherwise.
         */
-        bool push()
-        {
+        bool push() {
             JNIEnv *env = getCurrentJNIEnvironment();
 
             if (env->PushLocalFrame(m_frameSize) == 0) {
@@ -94,9 +88,8 @@ namespace jh
         *
         * @return True if there was an active local frame and it was poped. False otherwise.
         */
-        bool pop()
-        {
-            return pop<jobject>(nullptr);
+        bool pop() {
+            return pop < jobject > (nullptr);
         }
 
         /**
@@ -110,14 +103,14 @@ namespace jh
         * @param jobjectToKeep A pointer to the jobject pointer that should be preserved after local frame destruction.
         * @return True if there was an active local frame and it was poped. False otherwise.
         */
-        template <class JObjectCastable>
-        bool pop(JObjectCastable* jobjectToKeep)
-        {
+        template<class JObjectCastable>
+        bool pop(JObjectCastable *jobjectToKeep) {
             if (m_framesCount) {
                 JNIEnv *env = getCurrentJNIEnvironment();
 
                 if (jobjectToKeep) {
-                    *jobjectToKeep = static_cast<JObjectCastable>(env->PopLocalFrame(*jobjectToKeep));
+                    *jobjectToKeep = static_cast<JObjectCastable>(env->PopLocalFrame(
+                            *jobjectToKeep));
                 } else {
                     env->PopLocalFrame(nullptr);
                 }
@@ -145,6 +138,7 @@ namespace jh
         * Local frame should not be copied.
         */
         LocalReferenceFrame(const LocalReferenceFrame &) = delete;
+
         void operator=(const LocalReferenceFrame &) = delete;
     };
 }

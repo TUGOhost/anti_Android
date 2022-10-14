@@ -3,9 +3,12 @@
 #include "jni.h"
 #include "../calls/FieldCaller.h"
 
-JAVA_CLASS(JavaApplication, "android/app/Application")
-JAVA_CLASS(JavaContext, "android/content/Context")
-JAVA_CLASS(JavaApplicationInfo, "android/content/pm/ApplicationInfo")
+JAVA_CLASS(JavaApplication,
+"android/app/Application")
+JAVA_CLASS(JavaContext,
+"android/content/Context")
+JAVA_CLASS(JavaApplicationInfo,
+"android/content/pm/ApplicationInfo")
 
 #ifndef ANTI_ANDROID_ACTIVITYTHREAD_H
 #define ANTI_ANDROID_ACTIVITYTHREAD_H
@@ -15,18 +18,20 @@ public:
     void linkJavaNativeMethods() override {
 
     }
+
     jobject initializeJavaObject() override {
         return jh::getCurrentApplication();
     }
+
     jobject getContext() {
         //return object();
         return jh::callMethod<JavaContext>(object(), "getApplicationContext", true);
     }
 
-    jstring getDataDir(){
+    jstring getDataDir() {
         jobject applicationInfo = jh::callMethod<JavaApplicationInfo>(getContext(),
-                                                                        "getApplicationInfo",
-                                                                        true);
+                                                                      "getApplicationInfo",
+                                                                      true);
 
         jstring ret = jh::getFiled<jstring>(applicationInfo, "dataDir", true);
         jh::getCurrentJNIEnvironment()->DeleteLocalRef(applicationInfo);

@@ -62,7 +62,7 @@ std::string AntiDualApp::check_dual_app() {
                 buff[i] = '\0';
             } else {
                 if (count_file == 0) {
-                    count_file ++;
+                    count_file++;
                 } else {
                     if (access(buff, R_OK) == 0) {
 

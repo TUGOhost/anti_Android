@@ -35,6 +35,10 @@ add_library( # Sets the name of the library.
         check/anti_dual_app.h
         check/anti_xposed.cpp
         check/anti_xposed.h
+        check/anti_emulator.cpp
+        check/anti_emulator.h
+        check/anti_mem_dump.cpp
+        check/anti_mem_dump.h
 
         JNIHelper/utils/JavaObjectPointer.cpp
         JNIHelper/utils/JStringUtils.cpp

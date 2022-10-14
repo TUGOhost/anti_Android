@@ -27,8 +27,7 @@
 #include "../core/ErrorHandler.hpp"
 #include "../core/JavaMethodSignature.hpp"
 
-namespace jh
-{
+namespace jh {
     /**
     * Registers local functions as java native methods.
     *
@@ -41,7 +40,8 @@ namespace jh
     * @warning Java native methods should be registered only after JNI initialization, i.e. dont use this method while doing some static-level stuff.
     * @warning Don't call native methods from java until they are 100% registered in C++. There will be a crash if they aren't.
     */
-    bool registerJavaNativeMethods(std::string javaClassName, int methodCount, JNINativeMethod* methodDescriptions);
+    bool registerJavaNativeMethods(std::string javaClassName, int methodCount,
+                                   JNINativeMethod *methodDescriptions);
 
     /**
     * Registers some function or static method as a java native static method.
@@ -54,14 +54,14 @@ namespace jh
     * @warning Don't call native methods from java until they are 100% registered in C++. There will be a crash if they aren't.
     */
     template<class ReturnType, class ... ArgumentTypes>
-    bool registerStaticNativeMethod(std::string javaClassName, std::string methodName, ReturnType (*methodPointer)(ArgumentTypes...))
-    {
+    bool registerStaticNativeMethod(std::string javaClassName, std::string methodName,
+                                    ReturnType (*methodPointer)(ArgumentTypes...)) {
         std::string signature = getJavaMethodSignature<ReturnType, ArgumentTypes...>();
 
         JNINativeMethod method[1] = {
-            methodName.c_str(),
-            signature.c_str(),
-            (void*)methodPointer
+                methodName.c_str(),
+                signature.c_str(),
+                (void *) methodPointer
         };
 
         return registerJavaNativeMethods(javaClassName, 1, method);
@@ -79,9 +79,10 @@ namespace jh
     * @warning Don't call native methods from java until they are 100% registered in C++. There will be a crash if they aren't.
     */
     template<class JavaClassType, class ReturnType, class ... ArgumentTypes>
-    bool registerStaticNativeMethod(std::string methodName, ReturnType (*methodPointer)(ArgumentTypes...))
-    {
-        return registerStaticNativeMethod<ReturnType, ArgumentTypes ...>(JavaClassType::className(), methodName, methodPointer);
+    bool registerStaticNativeMethod(std::string methodName,
+                                    ReturnType (*methodPointer)(ArgumentTypes...)) {
+        return registerStaticNativeMethod<ReturnType, ArgumentTypes ...>(JavaClassType::className(),
+                                                                         methodName, methodPointer);
     }
 
     /**
@@ -98,8 +99,7 @@ namespace jh
     * @warning Native methods that were implemented by this class should NOT be called inside the java object constructor.
     */
     template<int id, class CppClass, class ReturnType, class ... Arguments>
-    class JavaNativeMethod
-    {
+    class JavaNativeMethod {
         /**
         * The type of the class method that will be called as native method.
         */
@@ -108,8 +108,9 @@ namespace jh
         /**
         * Java object wrapper should freely access native method.
         */
-        template <class, class>
-        friend class JavaObjectWrapper;
+        template<class, class>
+        friend
+        class JavaObjectWrapper;
 
     private:
         /**
@@ -120,10 +121,11 @@ namespace jh
         /**
         * Sets the native method pointer. Should be called once (no less, no more) per native method.
         */
-        static void setCallback(MethodImplementationPointer callback)
-        {
+        static void setCallback(MethodImplementationPointer callback) {
             if (s_callback) {
-                reportInternalError("redefining callback for java class [" + CppClass::JavaClass::className() + "]");
+                reportInternalError(
+                        "redefining callback for java class [" + CppClass::JavaClass::className() +
+                        "]");
             }
 
             s_callback = callback;
@@ -132,16 +134,19 @@ namespace jh
         /**
         * Static method that is used to link java native method and local instance method.
         */
-        static ReturnType rawNativeMethod(JNIEnv*, jobject javaObject, Arguments ... args)
-        {
-            return CppClass::template callCppObjectMethod<ReturnType>(javaObject, [=] (CppClass* wrapperInstance) -> ReturnType {
-                return (wrapperInstance->*s_callback)(args...);
-            });
+        static ReturnType rawNativeMethod(JNIEnv *, jobject javaObject, Arguments ... args) {
+            return CppClass::template callCppObjectMethod<ReturnType>(javaObject,
+                                                                      [=](CppClass *wrapperInstance) -> ReturnType {
+                                                                          return (wrapperInstance->*
+                                                                                  s_callback)(
+                                                                                  args...);
+                                                                      });
         }
     };
 
     template<int id, class CppClass, class ReturnType, class ... Arguments>
-    typename JavaNativeMethod<id, CppClass, ReturnType, Arguments...>::MethodImplementationPointer JavaNativeMethod<id, CppClass, ReturnType, Arguments...>::s_callback(nullptr);
+    typename JavaNativeMethod<id, CppClass, ReturnType, Arguments...>::MethodImplementationPointer JavaNativeMethod<id, CppClass, ReturnType, Arguments...>::s_callback(
+            nullptr);
 }
 
 #endif

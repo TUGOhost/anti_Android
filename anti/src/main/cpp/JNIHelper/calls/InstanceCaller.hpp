@@ -35,16 +35,14 @@
 #include "../core/JNIEnvironment.hpp"
 #include "../core/JavaMethodSignature.hpp"
 
-namespace jh
-{
+namespace jh {
     /**
     * Class that can call methods which return java objects.
     */
     template<class ReturnType, class ... ArgumentTypes>
-    struct InstanceCaller
-    {
-        static jobject call(JNIEnv* env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments)
-        {
+    struct InstanceCaller {
+        static jobject
+        call(JNIEnv *env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments) {
             return env->CallObjectMethod(instance, javaMethod, arguments...);
         }
     };
@@ -53,10 +51,9 @@ namespace jh
     * Class that can call methods which doesn't return anything.
     */
     template<class ... ArgumentTypes>
-    struct InstanceCaller<void, ArgumentTypes...>
-    {
-        static void call(JNIEnv* env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments)
-        {
+    struct InstanceCaller<void, ArgumentTypes...> {
+        static void
+        call(JNIEnv *env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments) {
             env->CallVoidMethod(instance, javaMethod, arguments...);
         }
     };
@@ -65,10 +62,9 @@ namespace jh
     * Class that can call methods which return jboolean values.
     */
     template<class ... ArgumentTypes>
-    struct InstanceCaller<jboolean, ArgumentTypes...>
-    {
-        static jboolean call(JNIEnv* env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments)
-        {
+    struct InstanceCaller<jboolean, ArgumentTypes...> {
+        static jboolean
+        call(JNIEnv *env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments) {
             return env->CallBooleanMethod(instance, javaMethod, arguments...);
         }
     };
@@ -77,10 +73,9 @@ namespace jh
     * Class that can call methods which return jint values.
     */
     template<class ... ArgumentTypes>
-    struct InstanceCaller<jint, ArgumentTypes...>
-    {
-        static jint call(JNIEnv* env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments)
-        {
+    struct InstanceCaller<jint, ArgumentTypes...> {
+        static jint
+        call(JNIEnv *env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments) {
             return env->CallIntMethod(instance, javaMethod, arguments...);
         }
     };
@@ -89,10 +84,9 @@ namespace jh
     * Class that can call methods which return jlong values.
     */
     template<class ... ArgumentTypes>
-    struct InstanceCaller<jlong, ArgumentTypes...>
-    {
-        static jlong call(JNIEnv* env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments)
-        {
+    struct InstanceCaller<jlong, ArgumentTypes...> {
+        static jlong
+        call(JNIEnv *env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments) {
             return env->CallLongMethod(instance, javaMethod, arguments...);
         }
     };
@@ -101,10 +95,9 @@ namespace jh
     * Class that can call methods which return jfloat values.
     */
     template<class ... ArgumentTypes>
-    struct InstanceCaller<jfloat, ArgumentTypes...>
-    {
-        static jfloat call(JNIEnv* env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments)
-        {
+    struct InstanceCaller<jfloat, ArgumentTypes...> {
+        static jfloat
+        call(JNIEnv *env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments) {
             return env->CallFloatMethod(instance, javaMethod, arguments...);
         }
     };
@@ -113,10 +106,9 @@ namespace jh
     * Class that can call methods which return jdouble values.
     */
     template<class ... ArgumentTypes>
-    struct InstanceCaller<jdouble, ArgumentTypes...>
-    {
-        static jdouble call(JNIEnv* env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments)
-        {
+    struct InstanceCaller<jdouble, ArgumentTypes...> {
+        static jdouble
+        call(JNIEnv *env, jobject instance, jmethodID javaMethod, ArgumentTypes ... arguments) {
             return env->CallDoubleMethod(instance, javaMethod, arguments...);
         }
     };
@@ -131,12 +123,13 @@ namespace jh
     * @return Some value of ReturnType type returned by the specified method.
     */
     template<class ReturnType, class ... ArgumentTypes>
-    typename ToJavaType<ReturnType>::Type callMethod(jobject instance, std::string methodName,bool autoClearException,typename ToJavaType<ArgumentTypes>::Type ... arguments)
-    {
+    typename ToJavaType<ReturnType>::Type
+    callMethod(jobject instance, std::string methodName, bool autoClearException,
+               typename ToJavaType<ArgumentTypes>::Type ... arguments) {
         using RealReturnType = typename ToJavaType<ReturnType>::Type;
         if (instance == nullptr)
             return RealReturnType();
-        JNIEnv* env = getCurrentJNIEnvironment();
+        JNIEnv *env = getCurrentJNIEnvironment();
 
         std::string methodSignature = getJavaMethodSignature<ReturnType, ArgumentTypes...>();
 
@@ -146,13 +139,17 @@ namespace jh
             return RealReturnType();
         }
 
-        jmethodID javaMethod = env->GetMethodID(javaClass, methodName.c_str(), methodSignature.c_str());
+        jmethodID javaMethod = env->GetMethodID(javaClass, methodName.c_str(),
+                                                methodSignature.c_str());
         if (javaMethod == nullptr) {
-            reportInternalError("method [" + methodName + "] for java object instance not found, tried signature [" + methodSignature + "]");
+            reportInternalError("method [" + methodName +
+                                "] for java object instance not found, tried signature [" +
+                                methodSignature + "]");
             return RealReturnType();
         }
 
-        return static_cast<RealReturnType>(InstanceCaller<typename ToJavaType<ReturnType>::CallReturnType, typename ToJavaType<ArgumentTypes>::Type ...>::call(env, instance, javaMethod, arguments...));
+        return static_cast<RealReturnType>(InstanceCaller<typename ToJavaType<ReturnType>::CallReturnType, typename ToJavaType<ArgumentTypes>::Type ...>::call(
+                env, instance, javaMethod, arguments...));
     }
 }
 

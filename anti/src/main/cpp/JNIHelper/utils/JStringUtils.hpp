@@ -25,15 +25,14 @@
 #include <jni.h>
 #include <string>
 
-namespace jh
-{
+namespace jh {
     /**
     * Creates a new java string from C-style string.
     *
     * @param str String to be converted.
     * @return Equivalent java string.
     */
-    jstring createJString(const char* str);
+    jstring createJString(const char *str);
 
     /**
     * Creates a new java string from C++-style string.

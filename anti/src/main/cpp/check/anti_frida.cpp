@@ -15,7 +15,7 @@
 void AntiFrida::check() {
     char *libc_path = nullptr;
     int page_size = getpagesize();
-    uint64_t  start = frida_find_library_base("libc", &libc_path);
+    uint64_t start = frida_find_library_base("libc", &libc_path);
 
     if (start != 0 && nullptr != libc_path && strlen(libc_path) > 0) {
         uint64_t base = frida_find_library_space_base(start, page_size);
@@ -43,7 +43,7 @@ bool str_has_prefix(const char *str1, const char *str2) {
 
 // copy from https://github.com/frida/frida-core/blob/836d254614d836e39d17418e3b864c8b5862bf9b/src/linux/frida-helper-backend-glue.c#L3014
 uint64_t AntiFrida::frida_find_library_base(std::string library_name, char **library_path) {
-    uint64_t  result = 0;
+    uint64_t result = 0;
     std::string maps_path = "/proc/self/maps";
     const std::size_t line_size = 1024 + PATH_MAX;
     char *line, *path;
@@ -86,7 +86,7 @@ uint64_t AntiFrida::frida_find_library_base(std::string library_name, char **lib
         } else {
             char *p = strrchr(path, '/');
             if (p != nullptr) {
-                p ++;
+                p++;
                 if (str_has_prefix(p, library_name.c_str()) && strstr(p, ".so")) {
                     char next_char = p[library_name.size()];
                     if (next_char == '-' || next_char == '.') {

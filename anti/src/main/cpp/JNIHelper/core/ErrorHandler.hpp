@@ -11,17 +11,16 @@
 #include <string>
 #include <android/log.h>
 
-namespace jh
-{
+namespace jh {
     /**
     * Reports some error that happened during JNI-related actions to user.
     * This method is intended to be used only by this library.
     *
     * @param errorMessage Message string describing the error.
     */
-    inline void reportInternalError(std::string errorMessage)
-    {
-        __android_log_write(ANDROID_LOG_ERROR, "ZFJavaHelper", ("JavaHelper internal error: '" + errorMessage + "'.").c_str());
+    inline void reportInternalError(std::string errorMessage) {
+        __android_log_write(ANDROID_LOG_ERROR, "ZFJavaHelper",
+                            ("JavaHelper internal error: '" + errorMessage + "'.").c_str());
     }
 
     /**
@@ -30,9 +29,9 @@ namespace jh
     *
     * @param message Message string that should be reported to user.
     */
-    inline void reportInternalInfo(std::string message)
-    {
-        __android_log_write(ANDROID_LOG_INFO, "ZFJavaHelper", ("JavaHelper message: '" + message + "'.").c_str());
+    inline void reportInternalInfo(std::string message) {
+        __android_log_write(ANDROID_LOG_INFO, "ZFJavaHelper",
+                            ("JavaHelper message: '" + message + "'.").c_str());
     }
 }
 

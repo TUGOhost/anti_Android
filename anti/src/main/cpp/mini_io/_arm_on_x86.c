@@ -5,6 +5,7 @@
 
 static bool arm_on_x86 = false;
 static bool checked = false;
+
 bool _arm_on_x86() {
 #if defined(__aarch64__) || defined(__arm__)
     if(checked) {

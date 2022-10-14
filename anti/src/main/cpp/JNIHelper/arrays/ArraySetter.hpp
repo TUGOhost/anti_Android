@@ -10,8 +10,7 @@
 
 #include <jni.h>
 
-namespace jh
-{
+namespace jh {
     /**
     * Stub implementations for setting elements of java arrays.
     */
@@ -22,10 +21,8 @@ namespace jh
     * Implementations for setting elements of java boolean arrays.
     */
     template<>
-    struct JavaArraySetter<jbooleanArray>
-    {
-        static void set(JNIEnv* env, jbooleanArray array, jsize size, jboolean* elements)
-        {
+    struct JavaArraySetter<jbooleanArray> {
+        static void set(JNIEnv *env, jbooleanArray array, jsize size, jboolean *elements) {
             env->SetBooleanArrayRegion(array, 0, size, elements);
         }
     };
@@ -34,10 +31,8 @@ namespace jh
     * Implementations for setting elements of java int arrays.
     */
     template<>
-    struct JavaArraySetter<jintArray>
-    {
-        static void set(JNIEnv* env, jintArray array, jsize size, jint* elements)
-        {
+    struct JavaArraySetter<jintArray> {
+        static void set(JNIEnv *env, jintArray array, jsize size, jint *elements) {
             env->SetIntArrayRegion(array, 0, size, elements);
         }
     };
@@ -46,10 +41,8 @@ namespace jh
     * Implementations for setting elements of java long arrays.
     */
     template<>
-    struct JavaArraySetter<jlongArray>
-    {
-        static void set(JNIEnv* env, jlongArray array, jsize size, jlong* elements)
-        {
+    struct JavaArraySetter<jlongArray> {
+        static void set(JNIEnv *env, jlongArray array, jsize size, jlong *elements) {
             env->SetLongArrayRegion(array, 0, size, elements);
         }
     };
@@ -58,10 +51,8 @@ namespace jh
     * Implementations for setting elements of java float arrays.
     */
     template<>
-    struct JavaArraySetter<jfloatArray>
-    {
-        static void set(JNIEnv* env, jfloatArray array, jsize size, jfloat* elements)
-        {
+    struct JavaArraySetter<jfloatArray> {
+        static void set(JNIEnv *env, jfloatArray array, jsize size, jfloat *elements) {
             env->SetFloatArrayRegion(array, 0, size, elements);
         }
     };
@@ -70,10 +61,8 @@ namespace jh
     * Implementations for setting elements of java double arrays.
     */
     template<>
-    struct JavaArraySetter<jdoubleArray>
-    {
-        static void set(JNIEnv* env, jdoubleArray array, jsize size, jdouble* elements)
-        {
+    struct JavaArraySetter<jdoubleArray> {
+        static void set(JNIEnv *env, jdoubleArray array, jsize size, jdouble *elements) {
             env->SetDoubleArrayRegion(array, 0, size, elements);
         }
     };
@@ -82,10 +71,8 @@ namespace jh
     * Implementations for setting elements of java object arrays.
     */
     template<>
-    struct JavaArraySetter<jobjectArray>
-    {
-        static void set(JNIEnv* env, jobjectArray array, jsize size, jobject* elements)
-        {
+    struct JavaArraySetter<jobjectArray> {
+        static void set(JNIEnv *env, jobjectArray array, jsize size, jobject *elements) {
             for (int i = 0; i < size; ++i) {
                 env->SetObjectArrayElement(array, i, elements[i]);
             }

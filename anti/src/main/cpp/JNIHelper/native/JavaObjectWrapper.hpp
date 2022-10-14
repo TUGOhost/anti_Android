@@ -79,8 +79,7 @@
 #include "../native/JavaNativeMethod.hpp"
 #include "../utils/JavaObjectPointer.hpp"
 
-namespace jh
-{
+namespace jh {
     /**
     * Small utility structure to hold information about java native methods.
     *
@@ -88,11 +87,10 @@ namespace jh
     * @param signature Full signature of the java native method.
     * @param pointer A pointer to the C++ function that should be called as native method.
     */
-    struct NativeMethodDescription
-    {
+    struct NativeMethodDescription {
         std::string name;
         std::string signature;
-        void* pointer;
+        void *pointer;
     };
 
     /**
@@ -102,9 +100,8 @@ namespace jh
     * @param InternalJavaClass The java class that should be wrapped. Should be declared by JH_JAVA_CUSTOM_CLASS macro.
     * @param WrapperClass The C++ class that wraps the java class. Should be equal to the class that derives from JavaObjectWrapper.
     */
-    template <class InternalJavaClass, class WrapperClass>
-    class JavaObjectWrapper
-    {
+    template<class InternalJavaClass, class WrapperClass>
+    class JavaObjectWrapper {
     public:
         /**
         * Declaring types for later usage by internal code.
@@ -116,26 +113,28 @@ namespace jh
         /**
         * Information about exsiting links between java objects and cpp wrappers.
         */
-        using WrapperObjectInfo = std::pair<jobject, CppClass*>;
+        using WrapperObjectInfo = std::pair<jobject, CppClass *>;
 
         /**
         * Native methods should have full access to the wrapper class.
         */
         template<int, class, class, class ...>
-        friend class JavaNativeMethod;
+        friend
+        class JavaNativeMethod;
 
         /**
         * Pool of all wrapper objects and their jobjects.
         */
-        static std::set<WrapperObjectInfo> s_objectsCollection;
+        static std::set <WrapperObjectInfo> s_objectsCollection;
 
         /**
         * Finds the wrapper object for jobject instance and calls the required method.
         */
         template<class MethodReturnType>
-        static MethodReturnType callCppObjectMethod(jobject javaObject, std::function<MethodReturnType(CppClass*)> callback)
-        {
-            for (auto& entry: s_objectsCollection) {
+        static MethodReturnType callCppObjectMethod(jobject javaObject,
+                                                    std::function<MethodReturnType(
+                                                            CppClass *)> callback) {
+            for (auto &entry: s_objectsCollection) {
                 if (jh::areEqual(entry.first, javaObject)) {
                     return callback(entry.second);
                 }
@@ -149,16 +148,14 @@ namespace jh
         /**
         * Registers the pair of wrapper object and the jobject.
         */
-        void registerObject(jobject javaObject, CppClass* cppObject)
-        {
+        void registerObject(jobject javaObject, CppClass *cppObject) {
             s_objectsCollection.insert(WrapperObjectInfo(javaObject, cppObject));
         }
 
         /**
         * Unregisters the pair of wrapper object and the jobject.
         */
-        void unregisterObject(jobject javaObject, CppClass* cppObject)
-        {
+        void unregisterObject(jobject javaObject, CppClass *cppObject) {
             auto entry = s_objectsCollection.find(WrapperObjectInfo(javaObject, cppObject));
 
             if (entry != s_objectsCollection.end()) {
@@ -173,35 +170,32 @@ namespace jh
         * Default constructor for java wrapper object.
         */
         JavaObjectWrapper()
-        : m_javaObject(nullptr)
-        {
+                : m_javaObject(nullptr) {
             // nothing to do here
         }
 
         /**
         * Removes this wrapper calss from the global wrapper's pool.
         */
-        virtual ~JavaObjectWrapper()
-        {
-            unregisterObject(m_javaObject, static_cast<CppClass*>(this));
+        virtual ~JavaObjectWrapper() {
+            unregisterObject(m_javaObject, static_cast<CppClass *>(this));
         }
 
         /**
         * Returns the jobject of this wrapper class instance. Will also link
         * native methods and initialize the internal java object if it wasn't done before.
         */
-        jobject object()
-        {
+        jobject object() {
             if (!s_nativeMethodsWereRegistered) {
                 linkJavaNativeMethods();
 
-                std::vector<JNINativeMethod> descriptions;
-                for (auto& description : s_nativeMethodsDescriptions) {
+                std::vector <JNINativeMethod> descriptions;
+                for (auto &description: s_nativeMethodsDescriptions) {
                     descriptions.push_back({
-                        description.name.c_str(),
-                        description.signature.c_str(),
-                        description.pointer
-                    });
+                                                   description.name.c_str(),
+                                                   description.signature.c_str(),
+                                                   description.pointer
+                                           });
                 }
 
                 if (s_nativeMethodsDescriptions.size() > 0) {
@@ -219,7 +213,7 @@ namespace jh
                 m_javaObject = initializeJavaObject();
 
                 if (m_javaObject) {
-                    registerObject(m_javaObject, static_cast<CppClass*>(this));
+                    registerObject(m_javaObject, static_cast<CppClass *>(this));
                 }
             }
 
@@ -241,7 +235,7 @@ namespace jh
         * Holds the information about native methods registration.
         */
         static bool s_nativeMethodsWereRegistered;
-        static std::vector<NativeMethodDescription> s_nativeMethodsDescriptions;
+        static std::vector <NativeMethodDescription> s_nativeMethodsDescriptions;
 
         /**
         * This method should specify all necessary native methods that will be used by the java class.
@@ -260,27 +254,28 @@ namespace jh
         * @warning Native methods that were registered this way should NOT be called inside the java object constructor.
         */
         template<int id, class ReturnType, class ... Arguments>
-        void registerNativeMethod(std::string methodName, typename ToJavaType<ReturnType>::Type (CppClass::*methodPointer)(typename ToJavaType<Arguments>::Type...))
-        {
+        void registerNativeMethod(std::string methodName,
+                                  typename ToJavaType<ReturnType>::Type (CppClass::*methodPointer)(
+                                          typename ToJavaType<Arguments>::Type...)) {
             using NativeMethodClass = JavaNativeMethod<id, CppClass, typename ToJavaType<ReturnType>::Type, typename ToJavaType<Arguments>::Type ...>;
 
             s_nativeMethodsDescriptions.push_back({
-                methodName,
-                getJavaMethodSignature<ReturnType, Arguments...>(),
-                (void*)&NativeMethodClass::rawNativeMethod
-            });
+                                                          methodName,
+                                                          getJavaMethodSignature<ReturnType, Arguments...>(),
+                                                          (void *) &NativeMethodClass::rawNativeMethod
+                                                  });
 
             NativeMethodClass::setCallback(methodPointer);
         }
     };
 
-    template <class InternalJavaClass, class WrapperClass>
+    template<class InternalJavaClass, class WrapperClass>
     std::set<typename JavaObjectWrapper<InternalJavaClass, WrapperClass>::WrapperObjectInfo> JavaObjectWrapper<InternalJavaClass, WrapperClass>::s_objectsCollection;
 
-    template <class InternalJavaClass, class WrapperClass>
-    std::vector<NativeMethodDescription> JavaObjectWrapper<InternalJavaClass, WrapperClass>::s_nativeMethodsDescriptions;
+    template<class InternalJavaClass, class WrapperClass>
+    std::vector <NativeMethodDescription> JavaObjectWrapper<InternalJavaClass, WrapperClass>::s_nativeMethodsDescriptions;
 
-    template <class InternalJavaClass, class WrapperClass>
+    template<class InternalJavaClass, class WrapperClass>
     bool JavaObjectWrapper<InternalJavaClass, WrapperClass>::s_nativeMethodsWereRegistered = false;
 }
 

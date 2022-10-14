@@ -37,8 +37,9 @@
 #include <jni.h>
 #include <string>
 
-namespace jh{
-    jclass FindClass(const std::string& name);
+namespace jh {
+    jclass FindClass(const std::string &name);
+
     void loadClassLoader();
 }
 /**

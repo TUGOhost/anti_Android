@@ -32,15 +32,15 @@ namespace jh {
 
         operator JniType() const { return _obj; }
 
-        void operator=(const JniType other){set(other);}
+        void operator=(const JniType other) { set(other); }
 
         void operator=(const JniGlobalRef<JniType> &ref) { set(ref.get()); }
 
 
-        operator bool() const
-        {
+        operator bool() const {
             return !areEqual(get(), nullptr);
         }
+
     private:
         JniType _obj;
     };

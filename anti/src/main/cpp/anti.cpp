@@ -1,10 +1,15 @@
 #include <jni.h>
 #include <string>
+#include <thread>
+
 #include "check/anti_frida.h"
 #include "check/anti_dual_app.h"
 #include "check/anti_xposed.h"
 #include "JNIHelper/JNIHelper.hpp"
 #include "xposeddetector/xposed.h"
+#include "check/anti_mem_dump.h"
+#include "check/anti_emulator.h"
+
 
 #define JNI_CLASS_NAME "com/tg/android/anti/NativeLib"
 
@@ -40,11 +45,17 @@ static jstring anti_debug(JNIEnv *env, jclass clazz) {
 }
 
 static jstring anti_mem_dump(JNIEnv *env, jclass clazz) {
-    return jh::createJString("security");
+
+    std::thread t(AntiMemDump::detect_memory_dump_loop, nullptr);
+    t.join();
+
+    return jh::createJString("anti MemDump...");
 }
 
 static jstring anti_emulator(JNIEnv *env, jclass clazz) {
-    return jh::createJString("security");
+    AntiEmulator antiEmulator;
+
+    return jh::createJString(antiEmulator.check());
 }
 
 static jstring anti_dual_app(JNIEnv *env, jclass clazz) {
@@ -55,7 +66,9 @@ static jstring anti_dual_app(JNIEnv *env, jclass clazz) {
 }
 
 
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
+JNIEXPORT jint
+
+JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     jh::onLoad(vm);
 

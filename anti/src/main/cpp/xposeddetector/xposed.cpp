@@ -21,7 +21,8 @@ jclass xposed::findLoadedClass(C_JNIEnv *env, jobject classLoader, const char *n
         goto clean;
     }
 
-    findLoadedClass = (*env)->GetStaticMethodID((JNIEnv *) env, vmClassLoader, "findLoadedClass", "(Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;");
+    findLoadedClass = (*env)->GetStaticMethodID((JNIEnv *) env, vmClassLoader, "findLoadedClass",
+                                                "(Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;");
     if ((*env)->ExceptionCheck((JNIEnv *) env)) {
         (*env)->ExceptionClear((JNIEnv *) env);
     }
@@ -31,7 +32,8 @@ jclass xposed::findLoadedClass(C_JNIEnv *env, jobject classLoader, const char *n
 
     //string = (*env)->NewStringUTF((JNIEnv *) env, name);
     string = jh::createJString(name);
-    loadedClass = (jclass) (*env)->CallStaticObjectMethod((JNIEnv *) env, vmClassLoader, findLoadedClass, classLoader, string);
+    loadedClass = (jclass)(*env)->CallStaticObjectMethod((JNIEnv *) env, vmClassLoader,
+                                                         findLoadedClass, classLoader, string);
 
     if ((*env)->ExceptionCheck((JNIEnv *) env)) {
         (*env)->ExceptionClear((JNIEnv *) env);
@@ -61,7 +63,8 @@ jclass xposed::findXposedHelper(C_JNIEnv *env, jobject classLoader) {
 
 bool xposed::disableXposedBridge(C_JNIEnv *env, jclass classXposedBridge) {
     jh::JNIEnvironmentGuarantee jniEnvironmentGuarantee;
-    jfieldID field = (*env)->GetStaticFieldID((JNIEnv *) env, classXposedBridge, "disableHooks", "Z");
+    jfieldID field = (*env)->GetStaticFieldID((JNIEnv *) env, classXposedBridge, "disableHooks",
+                                              "Z");
     if ((*env)->ExceptionCheck((JNIEnv *) env)) {
         (*env)->ExceptionClear((JNIEnv *) env);
     }
@@ -75,10 +78,12 @@ bool xposed::disableXposedBridge(C_JNIEnv *env, jclass classXposedBridge) {
     }
     return true;
 }
+
 jfieldID xposed::findMapField(C_JNIEnv *env, jclass classXposedBridge) {
     jh::JNIEnvironmentGuarantee jniEnvironmentGuarantee;
     std::string signature = "Ljava/util/Map;";
-    jfieldID field = (*env)->GetStaticFieldID((JNIEnv *) env, classXposedBridge, "sHookedMethodCallbacks", signature.c_str());
+    jfieldID field = (*env)->GetStaticFieldID((JNIEnv *) env, classXposedBridge,
+                                              "sHookedMethodCallbacks", signature.c_str());
     if ((*env)->ExceptionCheck((JNIEnv *) env)) {
         (*env)->ExceptionClear((JNIEnv *) env);
     }
@@ -90,7 +95,8 @@ jfieldID xposed::findMapField(C_JNIEnv *env, jclass classXposedBridge) {
 #ifdef DEBUG
         LOGI("mapName: %s", mapName);
 #endif
-        return (*env)->GetStaticFieldID((JNIEnv *) env, classXposedBridge, mapName, signature.c_str());
+        return (*env)->GetStaticFieldID((JNIEnv *) env, classXposedBridge, mapName,
+                                        signature.c_str());
     }
     return nullptr;
 }
@@ -113,7 +119,9 @@ bool xposed::doClearHooksClass(C_JNIEnv *env, jclass classXposedBridge) {
     jmethodID method = (*env)->GetMethodID((JNIEnv *) env, classMap, "isEmpty", "()Z");
     jboolean isEmpty = (*env)->CallBooleanMethod((JNIEnv *) env, map, method);
     if (isEmpty == JNI_TRUE) {
-        isEmpty = (*env)->CallNonvirtualBooleanMethod((JNIEnv *) env, map, (*env)->GetObjectClass((JNIEnv *) env, map), method);
+        isEmpty = (*env)->CallNonvirtualBooleanMethod((JNIEnv *) env, map,
+                                                      (*env)->GetObjectClass((JNIEnv *) env, map),
+                                                      method);
     }
 
     jobject values;
@@ -121,16 +129,20 @@ bool xposed::doClearHooksClass(C_JNIEnv *env, jclass classXposedBridge) {
     if (isEmpty == JNI_TRUE) {
         values = (*env)->CallObjectMethod((JNIEnv *) env, map, method);
     } else {
-        values = (*env)->CallNonvirtualObjectMethod((JNIEnv *) env, map, (*env)->GetObjectClass((JNIEnv *) env, map), method);
+        values = (*env)->CallNonvirtualObjectMethod((JNIEnv *) env, map,
+                                                    (*env)->GetObjectClass((JNIEnv *) env, map),
+                                                    method);
     }
 
     jclass classCollection = (*env)->FindClass((JNIEnv *) env, "java/util/Collection");
-    method = (*env)->GetMethodID((JNIEnv *) env, classCollection, "iterator", "()Ljava/util/Iterator;");
+    method = (*env)->GetMethodID((JNIEnv *) env, classCollection, "iterator",
+                                 "()Ljava/util/Iterator;");
     jobject iterator = (*env)->CallObjectMethod((JNIEnv *) env, values, method);
 
     jclass classIterator = (*env)->FindClass((JNIEnv *) env, "java/util/Iterator");
     jmethodID hasNext = (*env)->GetMethodID((JNIEnv *) env, classIterator, "hasNext", "()Z");
-    jmethodID next = (*env)->GetMethodID((JNIEnv *) env, classIterator, "next", "()Ljava/lang/Object;");
+    jmethodID next = (*env)->GetMethodID((JNIEnv *) env, classIterator, "next",
+                                         "()Ljava/lang/Object;");
 
     jclass classObject = (*env)->FindClass((JNIEnv *) env, "java/lang/Object");
     jobject emptyArray = (*env)->NewObjectArray((JNIEnv *) env, 0, classObject, nullptr);
@@ -147,7 +159,8 @@ bool xposed::doClearHooksClass(C_JNIEnv *env, jclass classXposedBridge) {
                 (*env)->DeleteLocalRef((JNIEnv *) env, hookClass);
                 break;
             }
-            fieldElements = (*env)->GetFieldID((JNIEnv *) env, hookClass, name, "[Ljava/lang/Object;");
+            fieldElements = (*env)->GetFieldID((JNIEnv *) env, hookClass, name,
+                                               "[Ljava/lang/Object;");
             free(name);
             (*env)->DeleteLocalRef((JNIEnv *) env, hookClass);
         }
@@ -210,7 +223,6 @@ bool xposed::clearHooks(C_JNIEnv *env, jobject classLoader) {
 }
 
 
-
 void xposed::doAntiXposed(C_JNIEnv *env, jobject object, intptr_t hash) {
     jh::JNIEnvironmentGuarantee jniEnvironmentGuarantee;
     if (!add(hash)) {
@@ -242,17 +254,23 @@ void xposed::doAntiXposed(C_JNIEnv *env, jobject object, intptr_t hash) {
 void xposed::checkCallStack(C_JNIEnv *env) {
     jh::JNIEnvironmentGuarantee jniEnvironmentGuarantee;
     jclass threadClass = (*env)->FindClass((JNIEnv *) env, "java/lang/Thread");
-    jmethodID currentThread = (*env)->GetStaticMethodID((JNIEnv *) env, threadClass, "currentThread", "()Ljava/lang/Thread;");
-    jmethodID getStackTrace = (*env)->GetMethodID((JNIEnv *) env, threadClass, "getStackTrace", "()[Ljava/lang/StackTraceElement;");
-    jclass StackTraceElementClass = (*env)->FindClass((JNIEnv *) env, "java/lang/StackTraceElement");
-    jmethodID getClassName = (*env)->GetMethodID((JNIEnv *) env, StackTraceElementClass, "getClassName", "()Ljava/lang/String;");
+    jmethodID currentThread = (*env)->GetStaticMethodID((JNIEnv *) env, threadClass,
+                                                        "currentThread", "()Ljava/lang/Thread;");
+    jmethodID getStackTrace = (*env)->GetMethodID((JNIEnv *) env, threadClass, "getStackTrace",
+                                                  "()[Ljava/lang/StackTraceElement;");
+    jclass StackTraceElementClass = (*env)->FindClass((JNIEnv *) env,
+                                                      "java/lang/StackTraceElement");
+    jmethodID getClassName = (*env)->GetMethodID((JNIEnv *) env, StackTraceElementClass,
+                                                 "getClassName", "()Ljava/lang/String;");
 
     jobject thread = (*env)->CallStaticObjectMethod((JNIEnv *) env, threadClass, currentThread);
-    auto stackTraces = (jobjectArray) (*env)->CallObjectMethod((JNIEnv *) env, thread, getStackTrace);
+    auto stackTraces = (jobjectArray)(*env)->CallObjectMethod((JNIEnv *) env, thread,
+                                                              getStackTrace);
     int length = (*env)->GetArrayLength((JNIEnv *) env, stackTraces);
     for (int i = 0; i < length; i++) {
         jobject stackTrace = (*env)->GetObjectArrayElement((JNIEnv *) env, stackTraces, i);
-        auto jclassName = (jstring) (*env)->CallObjectMethod((JNIEnv *) env, stackTrace, getClassName);
+        auto jclassName = (jstring)(*env)->CallObjectMethod((JNIEnv *) env, stackTrace,
+                                                            getClassName);
         const char *className = (*env)->GetStringUTFChars((JNIEnv *) env, jclassName, nullptr);
         std::string methodHook = "de.robv.android.xposed.XC_MethodHook";
         if (memcmp(className, methodHook.c_str(), methodHook.size()) == 0) {

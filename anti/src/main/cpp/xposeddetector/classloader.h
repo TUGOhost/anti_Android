@@ -1,5 +1,6 @@
 #ifndef ANTI_ANDROID_CLASSLOADER_H
 #define ANTI_ANDROID_CLASSLOADER_H
+
 #include "jni.h"
 
 class classloader {

@@ -7,6 +7,7 @@
 
 
 JAVA_CLASS(JavaClassLoader, "java/lang/ClassLoader")
+
 JAVA_CLASS(JavaClass, "java/lang/Class")
 
 namespace jh {
@@ -14,10 +15,10 @@ namespace jh {
     static JniGlobalRef<jobject> *gClassLoader;
     static jmethodID gClassLoaderFindClass;
 
-    jclass FindClass(const std::string& name){
-        JNIEnv* env = getCurrentJNIEnvironment();
+    jclass FindClass(const std::string &name) {
+        JNIEnv *env = getCurrentJNIEnvironment();
         jclass javaClass = env->FindClass(name.c_str());
-        if (javaClass == nullptr){
+        if (javaClass == nullptr) {
             env->ExceptionClear();
             javaClass = static_cast<jclass>(env->CallObjectMethod(gClassLoader->get(),
                                                                   gClassLoaderFindClass,
@@ -26,10 +27,11 @@ namespace jh {
         return javaClass;
     }
 
-    void loadClassLoader(){
+    void loadClassLoader() {
         if (gClassLoader == nullptr) {
-            jobject classloader = jh::callMethod<JavaClassLoader>(getCurrentApplication(), "getClassLoader",
-                                                                    true);
+            jobject classloader = jh::callMethod<JavaClassLoader>(getCurrentApplication(),
+                                                                  "getClassLoader",
+                                                                  true);
             gClassLoader = new JniGlobalRef<jobject>();
             gClassLoader->set(classloader);
             gClassLoaderFindClass = findMethod<JavaClass, jstring>(JavaClassLoader::className(),

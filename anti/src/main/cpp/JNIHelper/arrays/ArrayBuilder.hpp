@@ -57,8 +57,7 @@
 #include "../arrays/ArrayGetter.hpp"
 #include "../arrays/ArraySetter.hpp"
 
-namespace jh
-{
+namespace jh {
     /**
     * Transforms and returns the java array data as an std::vector object.
     *
@@ -68,8 +67,8 @@ namespace jh
     * @return std::vector with the cope of all elements from the java array.
     */
     template<class JavaArrayType>
-    std::vector<typename ToJavaType<JavaArrayType>::ElementType> jarrayToVector(JavaArrayType array)
-    {
+    std::vector<typename ToJavaType<JavaArrayType>::ElementType>
+    jarrayToVector(JavaArrayType array) {
         auto env = getCurrentJNIEnvironment();
         return std::move(JavaArrayGetter<JavaArrayType>::get(env, array));
     }
@@ -81,8 +80,7 @@ namespace jh
     * @param ElementType Type of the elements inside this array.
     */
     template<class JavaArrayType, class ElementType>
-    class JavaBaseArrayBuilder
-    {
+    class JavaBaseArrayBuilder {
         /**
         * Type of all elements that can be added to this builder.
         */
@@ -99,15 +97,14 @@ namespace jh
         *
         * @param size Number of elements in the future array.
         */
-        JavaBaseArrayBuilder(std::size_t size) : m_elements(size) { };
+        JavaBaseArrayBuilder(std::size_t size) : m_elements(size) {};
 
         /**
         * Adds one element to the array.
         *
         * @param value Value of the new element.
         */
-        JavaBaseArrayBuilder<JavaArrayType, ElementType>& add(ArgumentType value)
-        {
+        JavaBaseArrayBuilder<JavaArrayType, ElementType> &add(ArgumentType value) {
             m_elements.push_back(value);
             return *this;
         }
@@ -117,9 +114,9 @@ namespace jh
         *
         * @param container Initializer list with several values.
         */
-        JavaBaseArrayBuilder<JavaArrayType, ElementType>& add(std::initializer_list<ArgumentType> container)
-        {
-            for (auto element : container)
+        JavaBaseArrayBuilder<JavaArrayType, ElementType> &
+        add(std::initializer_list <ArgumentType> container) {
+            for (auto element: container)
                 m_elements.push_back(element);
 
             return *this;
@@ -132,9 +129,9 @@ namespace jh
         * @param e Iterator to the last element.
         * @param p Hacky way to pass only correct iterators to this method.
         */
-        template <class Iterator>
-        JavaBaseArrayBuilder<JavaArrayType, ElementType>& add(Iterator b, Iterator e, typename Iterator::iterator_category* p = 0)
-        {
+        template<class Iterator>
+        JavaBaseArrayBuilder<JavaArrayType, ElementType> &
+        add(Iterator b, Iterator e, typename Iterator::iterator_category *p = 0) {
             for (auto it = b; it != e; ++it)
                 m_elements.push_back(*it);
 
@@ -146,10 +143,10 @@ namespace jh
         *
         * @return New java array with the stored elements.
         */
-        JavaArrayType build()
-        {
-            JNIEnv* env = getCurrentJNIEnvironment();
-            JavaArrayType array = JavaArrayAllocator<JavaArrayType, ElementType>::create(env, m_elements.size());
+        JavaArrayType build() {
+            JNIEnv *env = getCurrentJNIEnvironment();
+            JavaArrayType array = JavaArrayAllocator<JavaArrayType, ElementType>::create(env,
+                                                                                         m_elements.size());
             JavaArraySetter<JavaArrayType>::set(env, array, m_elements.size(), &m_elements[0]);
             return array;
         }
@@ -158,44 +155,50 @@ namespace jh
         /**
         * Container for elements that should be in the created hava array.
         */
-        std::vector<ArgumentType> m_elements;
+        std::vector <ArgumentType> m_elements;
     };
 
     /**
     * Java array builder for the java objects (default & custom).
     */
     template<class ElementType>
-    class JavaArrayBuilder : public JavaBaseArrayBuilder<jobjectArray, ElementType> { };
+    class JavaArrayBuilder : public JavaBaseArrayBuilder<jobjectArray, ElementType> {
+    };
 
     /**
     * Java array builder for the boolean array.
     */
     template<>
-    class JavaArrayBuilder<bool> : public JavaBaseArrayBuilder<jbooleanArray, bool> { };
+    class JavaArrayBuilder<bool> : public JavaBaseArrayBuilder<jbooleanArray, bool> {
+    };
 
     /**
     * Java array builder for the int array.
     */
     template<>
-    class JavaArrayBuilder<int> : public JavaBaseArrayBuilder<jintArray, int> { };
+    class JavaArrayBuilder<int> : public JavaBaseArrayBuilder<jintArray, int> {
+    };
 
     /**
     * Java array builder for the long array.
     */
     template<>
-    class JavaArrayBuilder<long> : public JavaBaseArrayBuilder<jlongArray, long> { };
+    class JavaArrayBuilder<long> : public JavaBaseArrayBuilder<jlongArray, long> {
+    };
 
     /**
     * Java array builder for the float array.
     */
     template<>
-    class JavaArrayBuilder<float> : public JavaBaseArrayBuilder<jfloatArray, float> { };
+    class JavaArrayBuilder<float> : public JavaBaseArrayBuilder<jfloatArray, float> {
+    };
 
     /**
     * Java array builder for the double array.
     */
     template<>
-    class JavaArrayBuilder<double> : public JavaBaseArrayBuilder<jdoubleArray, double> { };
+    class JavaArrayBuilder<double> : public JavaBaseArrayBuilder<jdoubleArray, double> {
+    };
 }
 
 #endif

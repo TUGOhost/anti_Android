@@ -43,29 +43,35 @@
 #include <jni.h>
 #include "../core/JNIEnvironment.hpp"
 
-namespace jh
-{
+namespace jh {
     /**
     * Java object (aka jobject) RAII wrapper that holds jobject as a global Java
     * reference. Can be assigned from jobject, casted to jobject and so on.
     */
-    class JavaObjectPointer
-    {
+    class JavaObjectPointer {
     public:
         JavaObjectPointer();
+
         JavaObjectPointer(jobject object);
-        JavaObjectPointer(const JavaObjectPointer& other);
+
+        JavaObjectPointer(const JavaObjectPointer &other);
+
         ~JavaObjectPointer();
 
-        JavaObjectPointer& operator=(const jobject other);
-        JavaObjectPointer& operator=(const JavaObjectPointer& other);
-        JavaObjectPointer& operator=(JavaObjectPointer&& other);
+        JavaObjectPointer &operator=(const jobject other);
+
+        JavaObjectPointer &operator=(const JavaObjectPointer &other);
+
+        JavaObjectPointer &operator=(JavaObjectPointer &&other);
 
         void release();
+
         void reset(jobject object);
+
         jobject get() const;
 
         operator jobject() const;
+
         operator bool() const;
 
     private:
@@ -79,9 +85,8 @@ namespace jh
     * @param rhs Another object.
     * @return True if they are the same object, or false otherwise.
     */
-    inline bool areEqual(const jobject lhs, const jobject rhs)
-    {
-        JNIEnv* env = getCurrentJNIEnvironment();
+    inline bool areEqual(const jobject lhs, const jobject rhs) {
+        JNIEnv *env = getCurrentJNIEnvironment();
         return env->IsSameObject(lhs, rhs);
     }
 
@@ -92,8 +97,7 @@ namespace jh
     * @param rhs Another Java object wrapper.
     * @return True if both wrappers point to the same object, or false otherwise.
     */
-    inline bool operator==(const JavaObjectPointer& lhs, const JavaObjectPointer& rhs)
-    {
+    inline bool operator==(const JavaObjectPointer &lhs, const JavaObjectPointer &rhs) {
         return areEqual(lhs, rhs);
     }
 
@@ -104,8 +108,7 @@ namespace jh
     * @param rhs Java object wrapper.
     * @return True if Java object wrapper points to the other Java object, or false otherwise.
     */
-    inline bool operator==(const jobject lhs, const JavaObjectPointer& rhs)
-    {
+    inline bool operator==(const jobject lhs, const JavaObjectPointer &rhs) {
         return areEqual(lhs, rhs);
     }
 
@@ -116,8 +119,7 @@ namespace jh
     * @param rhs Java object (aka jobject).
     * @return True if Java object wrapper points to the other Java object, or false otherwise.
     */
-    inline bool operator==(const JavaObjectPointer& lhs, const jobject rhs)
-    {
+    inline bool operator==(const JavaObjectPointer &lhs, const jobject rhs) {
         return areEqual(lhs, rhs);
     }
 }

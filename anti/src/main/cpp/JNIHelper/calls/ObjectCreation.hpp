@@ -35,8 +35,7 @@
 #include "../core/JNIEnvironment.hpp"
 #include "../core/JavaMethodSignature.hpp"
 
-namespace jh
-{
+namespace jh {
     /**
     * Allows to create Java objects via their constructors. Constructor argument
     * types should be explicitly specified via template arguments.
@@ -46,9 +45,9 @@ namespace jh
     * @return Create Java object pointer (aka jobject).
     */
     template<class ... ArgumentTypes>
-    jobject createNewObject(std::string className, typename ToJavaType<ArgumentTypes>::Type ... arguments)
-    {
-        JNIEnv* env = getCurrentJNIEnvironment();
+    jobject
+    createNewObject(std::string className, typename ToJavaType<ArgumentTypes>::Type ... arguments) {
+        JNIEnv *env = getCurrentJNIEnvironment();
 
         std::string methodSignature = getJavaMethodSignature<void, ArgumentTypes...>();
 
@@ -60,7 +59,9 @@ namespace jh
 
         jmethodID javaConstructor = env->GetMethodID(javaClass, "<init>", methodSignature.c_str());
         if (javaConstructor == nullptr) {
-            reportInternalError("constructor for class [" + className + "] not found, tried signature [" + methodSignature + "]");
+            reportInternalError(
+                    "constructor for class [" + className + "] not found, tried signature [" +
+                    methodSignature + "]");
             return nullptr;
         }
 
@@ -79,8 +80,7 @@ namespace jh
     * @return Create Java object pointer (aka jobject).
     */
     template<class NewObjectType, class ... ArgumentTypes>
-    jobject createNewObject(typename ToJavaType<ArgumentTypes>::Type ... arguments)
-    {
+    jobject createNewObject(typename ToJavaType<ArgumentTypes>::Type ... arguments) {
         return createNewObject<ArgumentTypes...>(NewObjectType::className(), arguments...);
     }
 }
