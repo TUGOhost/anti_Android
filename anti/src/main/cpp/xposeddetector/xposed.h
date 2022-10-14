@@ -1,7 +1,3 @@
-//
-// Created by 58 on 2022/10/12.
-//
-
 #ifndef ANTI_ANDROID_XPOSED_H
 #define ANTI_ANDROID_XPOSED_H
 

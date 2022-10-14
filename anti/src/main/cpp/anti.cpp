@@ -8,8 +8,6 @@
 
 #define JNI_CLASS_NAME "com/tg/android/anti/NativeLib"
 
-static JavaVM *jvm;
-
 static jstring anti_frida(JNIEnv *env, jclass clazz) {
     jh::JNIEnvironmentGuarantee jniEnvironmentGuarantee;
     AntiFrida antiFrida;

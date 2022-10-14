@@ -1,7 +1,3 @@
-//
-// Created by 58 on 2022/10/12.
-//
-
 #include "find_name.h"
 #include <cstring>
 

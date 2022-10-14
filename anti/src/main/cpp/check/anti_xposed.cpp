@@ -1,7 +1,3 @@
-//
-// Created by 58 on 2022/10/12.
-//
-
 #include "anti_xposed.h"
 #include <jni.h>
 #include "../xposeddetector/classloader.h"

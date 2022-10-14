@@ -1,7 +1,3 @@
-//
-// Created by 58 on 2022/10/12.
-//
-
 #include <string>
 #include "xposed.h"
 #include "find_name.h"
