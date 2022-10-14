@@ -45,3 +45,5 @@ Virtual App 会在自己的文件系统中创建一个文件目录，通过这�
 基于svc来获得app的安装目录，防止被hook（除内核层面）。
 
 ## Anti Emulator
+思路来源：https://bbs.pediy.com/thread-255672.htm
+
