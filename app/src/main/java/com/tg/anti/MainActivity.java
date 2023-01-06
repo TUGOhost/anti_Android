@@ -25,21 +25,14 @@ public class MainActivity extends Activity {
         TextView debug = findViewById(R.id.debug);
         debug.setText(AntiDebug());
 
+        // ANR wait fix
         TextView memDump = findViewById(R.id.memDump);
-        memDump.setText(AntiMemDump());
+        memDump.setText("AntiMemDump()");
 
         TextView emulator = findViewById(R.id.emulator);
         emulator.setText(AntiEmulator());
 
         TextView dualApp = findViewById(R.id.dualApp);
         dualApp.setText(AntiDualApp());
-
-        String dataDir = this.getApplication().getApplicationInfo().dataDir;
-
-        check();
-    }
-
-    public  String check() {
-        return "security";
     }
 }

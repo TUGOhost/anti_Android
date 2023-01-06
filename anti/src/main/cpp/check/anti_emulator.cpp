@@ -43,6 +43,7 @@ std::string AntiEmulator::check() {
         }
     }
 
+    LOGE("result: %s", result.c_str());
     return result;
 }
 
@@ -63,14 +64,13 @@ bool AntiEmulator::dir(std::string dir_name) {
 }
 
 std::string AntiEmulator::check_of_prop(std::string cmd) {
-    char *value = {0};
+    char value[256];
     std::string result;
     __system_property_get(cmd.c_str(), value);
 
     result = value;
 
-    value = {0};
-    free(value);
+    memset(value, 0, sizeof value);
 
     return result;
 }

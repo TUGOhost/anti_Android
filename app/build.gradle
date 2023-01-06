@@ -14,6 +14,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters 'arm64-v8a', "armeabi-v7a", "x86", "x86_64"
+        }
     }
 
     buildTypes {
@@ -38,4 +41,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation project(":anti")
+
+    implementation 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0'
 }
