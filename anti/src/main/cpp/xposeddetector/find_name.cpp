@@ -17,7 +17,7 @@ char *find_name::findField(C_JNIEnv *env, jobject clazz, int staticFlag, jclass 
                                             "()Ljava/lang/Class;");
     jmethodID getName = (*env)->GetMethodID((JNIEnv *) env, classField, "getName",
                                             "()Ljava/lang/String;");
-    auto fields = (jobjectArray)(*env)->CallObjectMethod((JNIEnv *) env, clazz, getDeclaredFields);
+    auto fields = (jobjectArray) (*env)->CallObjectMethod((JNIEnv *) env, clazz, getDeclaredFields);
     int length = (*env)->GetArrayLength((JNIEnv *) env, fields);
     for (int i = 0; i < length; ++i) {
         jobject field = (*env)->GetObjectArrayElement((JNIEnv *) env, fields, i);
@@ -25,7 +25,7 @@ char *find_name::findField(C_JNIEnv *env, jobject clazz, int staticFlag, jclass 
         if ((modifier & STATIC) == staticFlag
             && (*env)->IsSameObject((JNIEnv *) env, type,
                                     (*env)->CallObjectMethod((JNIEnv *) env, field, getType))) {
-            auto fieldString = (jstring)(*env)->CallObjectMethod((JNIEnv *) env, field, getName);
+            auto fieldString = (jstring) (*env)->CallObjectMethod((JNIEnv *) env, field, getName);
             const char *fieldName = (*env)->GetStringUTFChars((JNIEnv *) env, fieldString, nullptr);
             name = strdup(fieldName);
             (*env)->ReleaseStringUTFChars((JNIEnv *) env, fieldString, fieldName);
@@ -73,26 +73,26 @@ char *find_name::findVoidStringName(C_JNIEnv *env, jclass clazz) {
     jmethodID getName = (*env)->GetMethodID((JNIEnv *) env, classMethod, "getName",
                                             "()Ljava/lang/String;");
     jclass classString = (*env)->FindClass((JNIEnv *) env, "java/lang/String");
-    auto methods = (jobjectArray)(*env)->CallObjectMethod((JNIEnv *) env, clazz,
-                                                          getDeclaredMethods);
+    auto methods = (jobjectArray) (*env)->CallObjectMethod((JNIEnv *) env, clazz,
+                                                           getDeclaredMethods);
     int length = (*env)->GetArrayLength((JNIEnv *) env, methods);
     for (int i = 0; i < length; ++i) {
         jobject method = (*env)->GetObjectArrayElement((JNIEnv *) env, methods, i);
         int modifier = (*env)->CallIntMethod((JNIEnv *) env, method, getModifiers);
         if ((modifier & (NATIVE | STATIC)) == STATIC
             && (*env)->GetArrayLength((JNIEnv *) env,
-                                      (jarray)(*env)->CallObjectMethod((JNIEnv *) env, method,
-                                                                       getParameterTypes)) == 0
+                                      (jarray) (*env)->CallObjectMethod((JNIEnv *) env, method,
+                                                                        getParameterTypes)) == 0
             && (*env)->IsSameObject((JNIEnv *) env, classString,
                                     (*env)->CallObjectMethod((JNIEnv *) env, method,
                                                              getReturnType))) {
-            auto methodString = (jstring)(*env)->CallObjectMethod((JNIEnv *) env, method, getName);
+            auto methodString = (jstring) (*env)->CallObjectMethod((JNIEnv *) env, method, getName);
             const char *methodName = (*env)->GetStringUTFChars((JNIEnv *) env, methodString,
                                                                nullptr);
             jmethodID methodMethod = (*env)->GetStaticMethodID((JNIEnv *) env, clazz, methodName,
                                                                "()Ljava/lang/String;");
-            auto bridgeString = (jstring)(*env)->CallStaticObjectMethod((JNIEnv *) env, clazz,
-                                                                        methodMethod);
+            auto bridgeString = (jstring) (*env)->CallStaticObjectMethod((JNIEnv *) env, clazz,
+                                                                         methodMethod);
             if ((*env)->ExceptionCheck((JNIEnv *) env)) {
                 (*env)->ExceptionClear((JNIEnv *) env);
             }

@@ -125,7 +125,7 @@ namespace jh {
         /**
         * Pool of all wrapper objects and their jobjects.
         */
-        static std::set <WrapperObjectInfo> s_objectsCollection;
+        static std::set<WrapperObjectInfo> s_objectsCollection;
 
         /**
         * Finds the wrapper object for jobject instance and calls the required method.
@@ -189,7 +189,7 @@ namespace jh {
             if (!s_nativeMethodsWereRegistered) {
                 linkJavaNativeMethods();
 
-                std::vector <JNINativeMethod> descriptions;
+                std::vector<JNINativeMethod> descriptions;
                 for (auto &description: s_nativeMethodsDescriptions) {
                     descriptions.push_back({
                                                    description.name.c_str(),
@@ -235,7 +235,7 @@ namespace jh {
         * Holds the information about native methods registration.
         */
         static bool s_nativeMethodsWereRegistered;
-        static std::vector <NativeMethodDescription> s_nativeMethodsDescriptions;
+        static std::vector<NativeMethodDescription> s_nativeMethodsDescriptions;
 
         /**
         * This method should specify all necessary native methods that will be used by the java class.
@@ -273,7 +273,7 @@ namespace jh {
     std::set<typename JavaObjectWrapper<InternalJavaClass, WrapperClass>::WrapperObjectInfo> JavaObjectWrapper<InternalJavaClass, WrapperClass>::s_objectsCollection;
 
     template<class InternalJavaClass, class WrapperClass>
-    std::vector <NativeMethodDescription> JavaObjectWrapper<InternalJavaClass, WrapperClass>::s_nativeMethodsDescriptions;
+    std::vector<NativeMethodDescription> JavaObjectWrapper<InternalJavaClass, WrapperClass>::s_nativeMethodsDescriptions;
 
     template<class InternalJavaClass, class WrapperClass>
     bool JavaObjectWrapper<InternalJavaClass, WrapperClass>::s_nativeMethodsWereRegistered = false;

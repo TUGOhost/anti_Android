@@ -11,17 +11,15 @@
 #include <string>
 #include "ToJavaType.hpp"
 
-namespace jh
-{
+namespace jh {
     /**
     * Internal Java method signature deduction for two and more classes.
     */
     template<class FirstArgumentType, class ... OtherArgumentTypes>
-    struct Signature
-    {
-        static std::string string()
-        {
-            return ToJavaType<FirstArgumentType>::signature() + Signature<OtherArgumentTypes...>::string();
+    struct Signature {
+        static std::string string() {
+            return ToJavaType<FirstArgumentType>::signature() +
+                   Signature<OtherArgumentTypes...>::string();
         }
     };
 
@@ -29,10 +27,8 @@ namespace jh
     * Internal Java method signature deduction for one class.
     */
     template<class ArgumentType>
-    struct Signature<ArgumentType>
-    {
-        static std::string string()
-        {
+    struct Signature<ArgumentType> {
+        static std::string string() {
             return ToJavaType<ArgumentType>::signature();
         }
     };
@@ -45,12 +41,11 @@ namespace jh
     * @return Java method signature as a string.
     */
     template<class ReturnType, class FirstType, class ... ArgumentTypes>
-    std::string getJavaMethodSignature()
-    {
+    std::string getJavaMethodSignature() {
         return std::string("(")
-             + Signature<FirstType, ArgumentTypes...>::string()
-             + std::string(")")
-             + Signature<ReturnType>::string();
+               + Signature<FirstType, ArgumentTypes...>::string()
+               + std::string(")")
+               + Signature<ReturnType>::string();
     }
 
     /**
@@ -61,10 +56,9 @@ namespace jh
     * @return Java method signature as a string.
     */
     template<class ReturnType>
-    std::string getJavaMethodSignature()
-    {
+    std::string getJavaMethodSignature() {
         return std::string("()")
-             + Signature<ReturnType>::string();
+               + Signature<ReturnType>::string();
     }
 }
 

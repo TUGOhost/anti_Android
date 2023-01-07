@@ -4,11 +4,13 @@
 #include "../calls/FieldCaller.h"
 
 JAVA_CLASS(JavaApplication,
-"android/app/Application")
+           "android/app/Application")
+
 JAVA_CLASS(JavaContext,
-"android/content/Context")
+           "android/content/Context")
+
 JAVA_CLASS(JavaApplicationInfo,
-"android/content/pm/ApplicationInfo")
+           "android/content/pm/ApplicationInfo")
 
 #ifndef ANTI_ANDROID_ACTIVITYTHREAD_H
 #define ANTI_ANDROID_ACTIVITYTHREAD_H

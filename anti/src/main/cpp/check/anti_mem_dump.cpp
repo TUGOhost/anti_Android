@@ -8,6 +8,7 @@
 #include <time.h>
 #include <dirent.h>
 #include <stdio.h>
+#include "thread"
 
 #include "../mini_io/_mini_io.h"
 #include "../utils/mylibc.h"
@@ -26,7 +27,7 @@ static const std::string PROC_TASK_MEM = "/proc/self/task/%s/mem";
 static const std::string PROC_TASK_PAGEMAP = "/proc/self/task/%s/pagemap";
 
 
-void AntiMemDump::detect_memory_dump_loop(void *pargs) {
+void AntiMemDump::detect_memory_dump_loop(void* args) {
     struct timespec timereq;
     timereq.tv_sec = 1;
     timereq.tv_nsec = 0;
@@ -34,6 +35,7 @@ void AntiMemDump::detect_memory_dump_loop(void *pargs) {
     while (1) {
         detect_fileaccess_for_debugger_memorydump();
         _nanosleep(&timereq, nullptr);
+        //std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 

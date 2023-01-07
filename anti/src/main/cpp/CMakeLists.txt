@@ -45,7 +45,7 @@ add_library(
         xposeddetector/plt.c
         xposeddetector/xposed.cpp
         xposeddetector/xposed.h
-        )
+)
 
 
 find_library(

@@ -33,36 +33,36 @@ static uint32_t elf_hash(const uint8_t *name) {
 static ElfW(Dyn)
 *
 
-find_dyn_by_tag (ElfW(Dyn)
+find_dyn_by_tag(ElfW(Dyn)
 
-*dyn,
-ElfW(Sxword)
-tag) {
-while (dyn->d_tag != DT_NULL) {
-if (dyn->d_tag == tag) {
-return
-dyn;
-}
-++
-dyn;
-}
-return
-NULL;
+                *dyn,
+                ElfW(Sxword)
+                tag) {
+    while (dyn->d_tag != DT_NULL) {
+        if (dyn->d_tag == tag) {
+            return
+                    dyn;
+        }
+        ++
+                dyn;
+    }
+    return
+            NULL;
 }
 
 static inline bool
 
-is_global (ElfW(Sym)
+is_global(ElfW(Sym)
 
-*sym) {
-unsigned char stb = ELF_ST_BIND(sym->st_info);
-if (stb == STB_GLOBAL || stb == STB_WEAK) {
-return sym->st_shndx !=
-SHN_UNDEF;
-} else {
-return
-false;
-}
+          *sym) {
+    unsigned char stb = ELF_ST_BIND(sym->st_info);
+    if (stb == STB_GLOBAL || stb == STB_WEAK) {
+        return sym->st_shndx !=
+               SHN_UNDEF;
+    } else {
+        return
+                false;
+    }
 }
 
 static ElfW(Addr)
@@ -71,123 +71,123 @@ static ElfW(Addr)
 find_symbol(struct dl_phdr_info *info, ElfW(Dyn)
 
 *base_addr,
-const char *symbol
+            const char *symbol
 ) {
-ElfW(Dyn)
-*
-dyn;
+    ElfW(Dyn)
+            *
+            dyn;
 
-dyn = find_dyn_by_tag(base_addr, DT_SYMTAB);
-ElfW(Sym)
-*
-dynsym = (ElfW(Sym) * )(info->dlpi_addr + dyn->d_un.d_ptr);
+    dyn = find_dyn_by_tag(base_addr, DT_SYMTAB);
+    ElfW(Sym)
+            *
+            dynsym = (ElfW(Sym) *) (info->dlpi_addr + dyn->d_un.d_ptr);
 
-dyn = find_dyn_by_tag(base_addr, DT_STRTAB);
-char *dynstr = (char *) (info->dlpi_addr + dyn->d_un.d_ptr);
+    dyn = find_dyn_by_tag(base_addr, DT_STRTAB);
+    char *dynstr = (char *) (info->dlpi_addr + dyn->d_un.d_ptr);
 
-dyn = find_dyn_by_tag(base_addr, DT_GNU_HASH);
-if (dyn != NULL) {
-ElfW(Word)
-*
-dt_gnu_hash = (ElfW(Word) * )(info->dlpi_addr + dyn->d_un.d_ptr);
-size_t gnu_nbucket_ = dt_gnu_hash[0];
-uint32_t gnu_maskwords_ = dt_gnu_hash[2];
-uint32_t gnu_shift2_ = dt_gnu_hash[3];
-ElfW(Addr)
-*
-gnu_bloom_filter_ = (ElfW(Addr) * )(dt_gnu_hash + 4);
-uint32_t *gnu_bucket_ = (uint32_t * )(gnu_bloom_filter_ + gnu_maskwords_);
-uint32_t *gnu_chain_ = gnu_bucket_ + gnu_nbucket_ - dt_gnu_hash[1];
+    dyn = find_dyn_by_tag(base_addr, DT_GNU_HASH);
+    if (dyn != NULL) {
+        ElfW(Word)
+                *
+                dt_gnu_hash = (ElfW(Word) *) (info->dlpi_addr + dyn->d_un.d_ptr);
+        size_t gnu_nbucket_ = dt_gnu_hash[0];
+        uint32_t gnu_maskwords_ = dt_gnu_hash[2];
+        uint32_t gnu_shift2_ = dt_gnu_hash[3];
+        ElfW(Addr)
+                *
+                gnu_bloom_filter_ = (ElfW(Addr) *) (dt_gnu_hash + 4);
+        uint32_t *gnu_bucket_ = (uint32_t *) (gnu_bloom_filter_ + gnu_maskwords_);
+        uint32_t *gnu_chain_ = gnu_bucket_ + gnu_nbucket_ - dt_gnu_hash[1];
 
---
-gnu_maskwords_;
+        --
+                gnu_maskwords_;
 
-uint32_t hash = gnu_hash((uint8_t *) symbol);
-uint32_t h2 = hash >> gnu_shift2_;
+        uint32_t hash = gnu_hash((uint8_t *) symbol);
+        uint32_t h2 = hash >> gnu_shift2_;
 
-uint32_t bloom_mask_bits = sizeof(ElfW(Addr)) * 8;
-uint32_t word_num = (hash / bloom_mask_bits) & gnu_maskwords_;
-ElfW(Addr)
-bloom_word = gnu_bloom_filter_[word_num];
+        uint32_t bloom_mask_bits = sizeof(ElfW(Addr)) * 8;
+        uint32_t word_num = (hash / bloom_mask_bits) & gnu_maskwords_;
+        ElfW(Addr)
+                bloom_word = gnu_bloom_filter_[word_num];
 
-if ((1 & (bloom_word >> (hash % bloom_mask_bits)) &
-(bloom_word >> (h2 % bloom_mask_bits))) == 0) {
-return
-NULL;
-}
+        if ((1 & (bloom_word >> (hash % bloom_mask_bits)) &
+             (bloom_word >> (h2 % bloom_mask_bits))) == 0) {
+            return
+                    NULL;
+        }
 
-uint32_t n = gnu_bucket_[hash % gnu_nbucket_];
+        uint32_t n = gnu_bucket_[hash % gnu_nbucket_];
 
-if (n == 0) {
-return
-NULL;
-}
+        if (n == 0) {
+            return
+                    NULL;
+        }
 
-do {
-ElfW(Sym)
-*
-sym = dynsym + n;
-if (((gnu_chain_[n] ^ hash) >> 1) == 0
-&&
-is_global(sym)
-&&
-strcmp(dynstr
-+ sym->st_name, symbol) == 0) {
-ElfW(Addr)
-*
-symbol_sym = (ElfW(Addr) * )(info->dlpi_addr + sym->st_value);
+        do {
+            ElfW(Sym)
+                    *
+                    sym = dynsym + n;
+            if (((gnu_chain_[n] ^ hash) >> 1) == 0
+                &&
+                is_global(sym)
+                &&
+                strcmp(dynstr
+                       + sym->st_name, symbol) == 0) {
+                ElfW(Addr)
+                        *
+                        symbol_sym = (ElfW(Addr) *) (info->dlpi_addr + sym->st_value);
 #ifdef DEBUG_PLT
-LOGI("found %s(gnu+%u) in %s, %p", symbol, n, info->dlpi_name, symbol_sym);
+                LOGI("found %s(gnu+%u) in %s, %p", symbol, n, info->dlpi_name, symbol_sym);
 #endif
-return
-symbol_sym;
-}
-} while ((gnu_chain_[n++] & 1) == 0);
+                return
+                        symbol_sym;
+            }
+        } while ((gnu_chain_[n++] & 1) == 0);
 
-return
-NULL;
-}
+        return
+                NULL;
+    }
 
-dyn = find_dyn_by_tag(base_addr, DT_HASH);
-if (dyn != NULL) {
-ElfW(Word)
-*
-dt_hash = (ElfW(Word) * )(info->dlpi_addr + dyn->d_un.d_ptr);
-size_t nbucket_ = dt_hash[0];
-uint32_t *bucket_ = dt_hash + 2;
-uint32_t *chain_ = bucket_ + nbucket_;
+    dyn = find_dyn_by_tag(base_addr, DT_HASH);
+    if (dyn != NULL) {
+        ElfW(Word)
+                *
+                dt_hash = (ElfW(Word) *) (info->dlpi_addr + dyn->d_un.d_ptr);
+        size_t nbucket_ = dt_hash[0];
+        uint32_t *bucket_ = dt_hash + 2;
+        uint32_t *chain_ = bucket_ + nbucket_;
 
-uint32_t hash = elf_hash((uint8_t * )(symbol));
-for (
-uint32_t n = bucket_[hash % nbucket_];
-n != 0;
-n = chain_[n]
-) {
-ElfW(Sym)
-*
-sym = dynsym + n;
-if (
-is_global(sym)
-&&
-strcmp(dynstr
-+ sym->st_name, symbol) == 0) {
-ElfW(Addr)
-*
-symbol_sym = (ElfW(Addr) * )(info->dlpi_addr + sym->st_value);
+        uint32_t hash = elf_hash((uint8_t *) (symbol));
+        for (
+                uint32_t n = bucket_[hash % nbucket_];
+                n != 0;
+                n = chain_[n]
+                ) {
+            ElfW(Sym)
+                    *
+                    sym = dynsym + n;
+            if (
+                    is_global(sym)
+                    &&
+                    strcmp(dynstr
+                           + sym->st_name, symbol) == 0) {
+                ElfW(Addr)
+                        *
+                        symbol_sym = (ElfW(Addr) *) (info->dlpi_addr + sym->st_value);
 #ifdef DEBUG_PLT
-LOGI("found %s(elf+%u) in %s, %p", symbol, n, info->dlpi_name, symbol_sym);
+                LOGI("found %s(elf+%u) in %s, %p", symbol, n, info->dlpi_name, symbol_sym);
 #endif
-return
-symbol_sym;
-}
-}
+                return
+                        symbol_sym;
+            }
+        }
 
-return
-NULL;
-}
+        return
+                NULL;
+    }
 
-return
-NULL;
+    return
+            NULL;
 }
 
 #if defined(__LP64__)
@@ -222,67 +222,67 @@ static ElfW(Addr)
 find_plt(struct dl_phdr_info *info, ElfW(Dyn)
 
 *base_addr,
-const char *symbol
+         const char *symbol
 ) {
-ElfW(Dyn)
-*
-dyn = find_dyn_by_tag(base_addr, DT_JMPREL);
-if (dyn == NULL) {
-return
-NULL;
-}
-Elf_Rela
-*
-dynplt = (Elf_Rela * )(info->dlpi_addr + dyn->d_un.d_ptr);
+    ElfW(Dyn)
+            *
+            dyn = find_dyn_by_tag(base_addr, DT_JMPREL);
+    if (dyn == NULL) {
+        return
+                NULL;
+    }
+    Elf_Rela
+            *
+            dynplt = (Elf_Rela *) (info->dlpi_addr + dyn->d_un.d_ptr);
 
-dyn = find_dyn_by_tag(base_addr, DT_SYMTAB);
-ElfW(Sym)
-*
-dynsym = (ElfW(Sym) * )(info->dlpi_addr + dyn->d_un.d_ptr);
+    dyn = find_dyn_by_tag(base_addr, DT_SYMTAB);
+    ElfW(Sym)
+            *
+            dynsym = (ElfW(Sym) *) (info->dlpi_addr + dyn->d_un.d_ptr);
 
-dyn = find_dyn_by_tag(base_addr, DT_STRTAB);
-char *dynstr = (char *) (info->dlpi_addr + dyn->d_un.d_ptr);
+    dyn = find_dyn_by_tag(base_addr, DT_STRTAB);
+    char *dynstr = (char *) (info->dlpi_addr + dyn->d_un.d_ptr);
 
-dyn = find_dyn_by_tag(base_addr, DT_PLTRELSZ);
-if (dyn == NULL) {
-return
-NULL;
-}
-size_t count = dyn->d_un.d_val / sizeof(Elf_Rela);
+    dyn = find_dyn_by_tag(base_addr, DT_PLTRELSZ);
+    if (dyn == NULL) {
+        return
+                NULL;
+    }
+    size_t count = dyn->d_un.d_val / sizeof(Elf_Rela);
 
-for (
-size_t i = 0;
-i<count;
-++i) {
-Elf_Rela
-*
-plt = dynplt + i;
+    for (
+            size_t i = 0;
+            i < count;
+            ++i) {
+        Elf_Rela
+                *
+                plt = dynplt + i;
 #ifdef DEBUG_PLT
-if (ELF_R_TYPE(plt->r_info) != R_JUMP_SLOT) {
-    LOGW("invalid type for plt+%zu in %s", i, info->dlpi_name);
-    continue;
-}
+        if (ELF_R_TYPE(plt->r_info) != R_JUMP_SLOT) {
+            LOGW("invalid type for plt+%zu in %s", i, info->dlpi_name);
+            continue;
+        }
 #endif
-size_t idx = ELF_R_SYM(plt->r_info);
-idx = dynsym[idx].st_name;
-if (
-strcmp(dynstr
-+ idx, symbol) == 0) {
-ElfW(Addr)
-*
-symbol_plt = (ElfW(Addr) * )(info->dlpi_addr + plt->r_offset);
+        size_t idx = ELF_R_SYM(plt->r_info);
+        idx = dynsym[idx].st_name;
+        if (
+                strcmp(dynstr
+                       + idx, symbol) == 0) {
+            ElfW(Addr)
+                    *
+                    symbol_plt = (ElfW(Addr) *) (info->dlpi_addr + plt->r_offset);
 #ifdef DEBUG_PLT
-ElfW(Addr) *symbol_plt_value = (ElfW(Addr) *) *symbol_plt;
-LOGI("found %s(plt+%zu) in %s, %p -> %p", symbol, i, info->dlpi_name, symbol_plt,
-     symbol_plt_value);
+            ElfW(Addr) *symbol_plt_value = (ElfW(Addr) *) *symbol_plt;
+            LOGI("found %s(plt+%zu) in %s, %p -> %p", symbol, i, info->dlpi_name, symbol_plt,
+                 symbol_plt_value);
 #endif
-return
-symbol_plt;
-}
-}
+            return
+                    symbol_plt;
+        }
+    }
 
-return
-NULL;
+    return
+            NULL;
 }
 
 static inline bool
@@ -349,20 +349,20 @@ isThirdParty(const char *str) {
 
 static inline bool
 should_check_plt(Symbol
-*symbol,
-struct dl_phdr_info *info
+                 *symbol,
+                 struct dl_phdr_info *info
 ) {
-const char *path = info->dlpi_name;
-if (symbol->check & PLT_CHECK_PLT_ALL) {
-return
-true;
-} else if (symbol->check & PLT_CHECK_PLT_APP) {
-return *path != '/' ||
-isThirdParty(path);
-} else {
-return
-false;
-}
+    const char *path = info->dlpi_name;
+    if (symbol->check & PLT_CHECK_PLT_ALL) {
+        return
+                true;
+    } else if (symbol->check & PLT_CHECK_PLT_APP) {
+        return *path != '/' ||
+               isThirdParty(path);
+    } else {
+        return
+                false;
+    }
 }
 
 static int callback(struct dl_phdr_info *info, __unused size_t size, void *data) {
@@ -372,26 +372,26 @@ static int callback(struct dl_phdr_info *info, __unused size_t size, void *data)
 #endif
         return 0;
     }
-    Symbol * symbol = (Symbol *) data;
+    Symbol *symbol = (Symbol *) data;
 #if 0
     LOGI("Name: \"%s\" (%d segments)", info->dlpi_name, info->dlpi_phnum);
 #endif
     ++symbol->total;
     for (ElfW(Half) phdr_idx = 0; phdr_idx < info->dlpi_phnum;
-    ++phdr_idx) {
+         ++phdr_idx) {
         ElfW(Phdr)
-        phdr = info->dlpi_phdr[phdr_idx];
+                phdr = info->dlpi_phdr[phdr_idx];
         if (phdr.p_type != PT_DYNAMIC) {
             continue;
         }
-        ElfW(Dyn) * base_addr = (ElfW(Dyn) * )(info->dlpi_addr + phdr.p_vaddr);
-        ElfW(Addr) * addr;
+        ElfW(Dyn) *base_addr = (ElfW(Dyn) *) (info->dlpi_addr + phdr.p_vaddr);
+        ElfW(Addr) *addr;
         addr = should_check_plt(symbol, info) ? find_plt(info, base_addr, symbol->symbol_name)
                                               : NULL;
         if (addr != NULL) {
             if (symbol->symbol_plt != NULL) {
-                ElfW(Addr) * addr_value = (ElfW(Addr) * ) * addr;
-                ElfW(Addr) * symbol_plt_value = (ElfW(Addr) * ) * symbol->symbol_plt;
+                ElfW(Addr) *addr_value = (ElfW(Addr) *) *addr;
+                ElfW(Addr) *symbol_plt_value = (ElfW(Addr) *) *symbol->symbol_plt;
                 if (addr_value != symbol_plt_value) {
 #ifdef DEBUG_PLT
                     LOGW("%s, plt %p -> %p != %p", symbol->symbol_name, addr, addr_value,
@@ -423,7 +423,7 @@ static int callback(struct dl_phdr_info *info, __unused size_t size, void *data)
             }
         }
         if (symbol->symbol_plt != NULL && symbol->symbol_sym != NULL) {
-            ElfW(Addr) * symbol_plt_value = (ElfW(Addr) * ) * symbol->symbol_plt;
+            ElfW(Addr) *symbol_plt_value = (ElfW(Addr) *) *symbol->symbol_plt;
             // stop if unmatch
             if (symbol_plt_value != symbol->symbol_sym) {
 #ifdef DEBUG_PLT

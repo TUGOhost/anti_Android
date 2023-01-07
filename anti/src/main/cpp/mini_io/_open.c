@@ -30,8 +30,8 @@ int _open(const char *pathname, int flags, ...) {
     if (needs_mode(flags)) {
         va_list args;
         va_start(args, flags);
-        mode = (mode_t)(va_arg(args,
-        int));
+        mode = (mode_t) (va_arg(args,
+                                int));
         va_end(args);
     }
 

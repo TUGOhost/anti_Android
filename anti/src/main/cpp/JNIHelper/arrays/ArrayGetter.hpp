@@ -23,11 +23,11 @@ namespace jh {
     */
     template<>
     struct JavaArrayGetter<jbooleanArray> {
-        static std::vector <jboolean> get(JNIEnv *env, jbooleanArray array) {
+        static std::vector<jboolean> get(JNIEnv *env, jbooleanArray array) {
             jint size = env->GetArrayLength(array);
             jboolean *elements = env->GetBooleanArrayElements(array, nullptr);
 
-            std::vector <jboolean> result(static_cast<std::size_t>(size));
+            std::vector<jboolean> result(static_cast<std::size_t>(size));
             for (int i = 0; i < size; ++i) {
                 result[i] = elements[i];
             }
@@ -43,11 +43,11 @@ namespace jh {
     */
     template<>
     struct JavaArrayGetter<jintArray> {
-        static std::vector <jint> get(JNIEnv *env, jintArray array) {
+        static std::vector<jint> get(JNIEnv *env, jintArray array) {
             jint size = env->GetArrayLength(array);
             jint *elements = env->GetIntArrayElements(array, nullptr);
 
-            std::vector <jint> result(static_cast<std::size_t>(size));
+            std::vector<jint> result(static_cast<std::size_t>(size));
             for (int i = 0; i < size; ++i) {
                 result[i] = elements[i];
             }
@@ -63,11 +63,11 @@ namespace jh {
     */
     template<>
     struct JavaArrayGetter<jlongArray> {
-        static std::vector <jlong> get(JNIEnv *env, jlongArray array) {
+        static std::vector<jlong> get(JNIEnv *env, jlongArray array) {
             jint size = env->GetArrayLength(array);
             jlong *elements = env->GetLongArrayElements(array, nullptr);
 
-            std::vector <jlong> result(static_cast<std::size_t>(size));
+            std::vector<jlong> result(static_cast<std::size_t>(size));
             for (int i = 0; i < size; ++i) {
                 result[i] = elements[i];
             }
@@ -83,11 +83,11 @@ namespace jh {
     */
     template<>
     struct JavaArrayGetter<jfloatArray> {
-        static std::vector <jfloat> get(JNIEnv *env, jfloatArray array) {
+        static std::vector<jfloat> get(JNIEnv *env, jfloatArray array) {
             jint size = env->GetArrayLength(array);
             jfloat *elements = env->GetFloatArrayElements(array, nullptr);
 
-            std::vector <jfloat> result(static_cast<std::size_t>(size));
+            std::vector<jfloat> result(static_cast<std::size_t>(size));
             for (int i = 0; i < size; ++i) {
                 result[i] = elements[i];
             }
@@ -103,11 +103,11 @@ namespace jh {
     */
     template<>
     struct JavaArrayGetter<jdoubleArray> {
-        static std::vector <jdouble> get(JNIEnv *env, jdoubleArray array) {
+        static std::vector<jdouble> get(JNIEnv *env, jdoubleArray array) {
             jint size = env->GetArrayLength(array);
             jdouble *elements = env->GetDoubleArrayElements(array, nullptr);
 
-            std::vector <jdouble> result(static_cast<std::size_t>(size));
+            std::vector<jdouble> result(static_cast<std::size_t>(size));
             for (int i = 0; i < size; ++i) {
                 result[i] = elements[i];
             }
@@ -123,10 +123,10 @@ namespace jh {
     */
     template<>
     struct JavaArrayGetter<jobjectArray> {
-        static std::vector <jobject> get(JNIEnv *env, jobjectArray array) {
+        static std::vector<jobject> get(JNIEnv *env, jobjectArray array) {
             jint size = env->GetArrayLength(array);
 
-            std::vector <jobject> result(static_cast<std::size_t>(size));
+            std::vector<jobject> result(static_cast<std::size_t>(size));
             for (int i = 0; i < size; ++i) {
                 result[i] = env->GetObjectArrayElement(array, i);
             }

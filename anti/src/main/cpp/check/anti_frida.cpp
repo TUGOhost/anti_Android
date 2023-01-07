@@ -63,8 +63,8 @@ uint64_t AntiFrida::frida_find_library_base(std::string library_name, char **lib
 
         path[0] = 0;
         n = sscanf(line, "%"
-        PRIx64
-        "-%*x %*s %*x %*s %*s %s", &start, path);
+                         PRIx64
+                         "-%*x %*s %*x %*s %*s %s", &start, path);
 
         if (n != 2) {
             continue;
@@ -127,10 +127,10 @@ uint64_t AntiFrida::frida_find_library_space_base(uint64_t base, uint32_t page_s
         int n = 0;
 
         n = sscanf(line, "%"
-        PRIx64
-        "-%"
-        PRIx64
-        "", &start, &end);
+                         PRIx64
+                         "-%"
+                         PRIx64
+                         "", &start, &end);
 
         if (n != 2) {
             continue;

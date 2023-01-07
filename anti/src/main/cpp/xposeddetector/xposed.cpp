@@ -32,8 +32,8 @@ jclass xposed::findLoadedClass(C_JNIEnv *env, jobject classLoader, const char *n
 
     //string = (*env)->NewStringUTF((JNIEnv *) env, name);
     string = jh::createJString(name);
-    loadedClass = (jclass)(*env)->CallStaticObjectMethod((JNIEnv *) env, vmClassLoader,
-                                                         findLoadedClass, classLoader, string);
+    loadedClass = (jclass) (*env)->CallStaticObjectMethod((JNIEnv *) env, vmClassLoader,
+                                                          findLoadedClass, classLoader, string);
 
     if ((*env)->ExceptionCheck((JNIEnv *) env)) {
         (*env)->ExceptionClear((JNIEnv *) env);
@@ -264,13 +264,13 @@ void xposed::checkCallStack(C_JNIEnv *env) {
                                                  "getClassName", "()Ljava/lang/String;");
 
     jobject thread = (*env)->CallStaticObjectMethod((JNIEnv *) env, threadClass, currentThread);
-    auto stackTraces = (jobjectArray)(*env)->CallObjectMethod((JNIEnv *) env, thread,
-                                                              getStackTrace);
+    auto stackTraces = (jobjectArray) (*env)->CallObjectMethod((JNIEnv *) env, thread,
+                                                               getStackTrace);
     int length = (*env)->GetArrayLength((JNIEnv *) env, stackTraces);
     for (int i = 0; i < length; i++) {
         jobject stackTrace = (*env)->GetObjectArrayElement((JNIEnv *) env, stackTraces, i);
-        auto jclassName = (jstring)(*env)->CallObjectMethod((JNIEnv *) env, stackTrace,
-                                                            getClassName);
+        auto jclassName = (jstring) (*env)->CallObjectMethod((JNIEnv *) env, stackTrace,
+                                                             getClassName);
         const char *className = (*env)->GetStringUTFChars((JNIEnv *) env, jclassName, nullptr);
         std::string methodHook = "de.robv.android.xposed.XC_MethodHook";
         if (memcmp(className, methodHook.c_str(), methodHook.size()) == 0) {

@@ -33,8 +33,7 @@
 
 #include <jni.h>
 
-namespace jh
-{
+namespace jh {
 
     /**
      * 初始化方法
@@ -49,7 +48,7 @@ namespace jh
     * @warning Right now, it depends on 'jnienv.*' zframework code.
     * @warning Can be nullptr if called before JNI initialization.
     */
-    JavaVM* getJavaVM();
+    JavaVM *getJavaVM();
 
     /**
     * Returns the JNI environment pointer for the current thread.
@@ -57,7 +56,7 @@ namespace jh
     * @return JNIEnv pointer to the current JNI environment.
     * @warning Can be nullptr if called in non-java or unattached thread.
     */
-    JNIEnv* getCurrentJNIEnvironment();
+    JNIEnv *getCurrentJNIEnvironment();
 
     jobject getCurrentApplication();
 
@@ -68,10 +67,10 @@ namespace jh
     *
     * @warning Right now, user can't use non-default Java objects in non-Java thread.
     */
-    class JNIEnvironmentGuarantee
-    {
+    class JNIEnvironmentGuarantee {
     public:
         JNIEnvironmentGuarantee();
+
         ~JNIEnvironmentGuarantee();
 
     private:

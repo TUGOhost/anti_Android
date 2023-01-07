@@ -47,3 +47,8 @@ Virtual App 会在自己的文件系统中创建一个文件目录，通过这�
 ## Anti Emulator
 思路来源：https://bbs.pediy.com/thread-255672.htm
 
+# Thanks
+- [xCrash](https://github.com/iqiyi/xCrash)
+- [JNIHelper](https://github.com/kvintessence/JNIHelper)
+- [XposedDetector](https://github.com/vvb2060/XposedDetector)
+- [AntiDebugandMemoryDump](https://github.com/darvincisec/AntiDebugandMemoryDump)

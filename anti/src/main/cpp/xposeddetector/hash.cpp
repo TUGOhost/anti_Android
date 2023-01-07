@@ -16,7 +16,7 @@ bool add(intptr_t hash) {
     }
     if (index >= size) {
         size += 4;
-        container = (intptr_t * )(realloc(container, size * sizeof(intptr_t)));
+        container = (intptr_t *) (realloc(container, size * sizeof(intptr_t)));
     }
     container[index++] = hash;
     return true;

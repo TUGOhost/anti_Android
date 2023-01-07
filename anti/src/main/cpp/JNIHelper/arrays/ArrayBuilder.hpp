@@ -115,7 +115,7 @@ namespace jh {
         * @param container Initializer list with several values.
         */
         JavaBaseArrayBuilder<JavaArrayType, ElementType> &
-        add(std::initializer_list <ArgumentType> container) {
+        add(std::initializer_list<ArgumentType> container) {
             for (auto element: container)
                 m_elements.push_back(element);
 
@@ -155,7 +155,7 @@ namespace jh {
         /**
         * Container for elements that should be in the created hava array.
         */
-        std::vector <ArgumentType> m_elements;
+        std::vector<ArgumentType> m_elements;
     };
 
     /**

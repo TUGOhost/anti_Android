@@ -47,7 +47,7 @@ static jstring anti_debug(JNIEnv *env, jclass clazz) {
 static jstring anti_mem_dump(JNIEnv *env, jclass clazz) {
 
     std::thread t(AntiMemDump::detect_memory_dump_loop, nullptr);
-    t.join();
+    t.detach();
 
     return jh::createJString("anti MemDump...");
 }

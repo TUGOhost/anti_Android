@@ -4,7 +4,7 @@
 int _errno;
 
 long ___set_errno_internal(int n) {
-  _errno = n;
-  return -1;
+    _errno = n;
+    return -1;
 }
 
