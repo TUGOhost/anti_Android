@@ -3,6 +3,7 @@
 #include <elf.h>
 #include <link.h>
 #include <stdbool.h>
+#include "Utils.h"
 
 #ifdef __cplusplus
 extern "C" {
