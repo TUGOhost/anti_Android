@@ -49,7 +49,7 @@ std::string AntiEmulator::check() {
 
 bool AntiEmulator::check_of_file(std::string file_name) {
     int fd = _open(file_name.c_str(), O_RDONLY);
-    if (fd == errno) {
+    if (fd == errno || fd == -1) {
         return false;
     }
     return true;
@@ -57,7 +57,7 @@ bool AntiEmulator::check_of_file(std::string file_name) {
 
 bool AntiEmulator::dir(std::string dir_name) {
     int fd = _open(dir_name.c_str(), O_DIRECTORY);
-    if (fd == errno) {
+    if (fd == errno || fd == -1) {
         return false;
     }
     return true;
